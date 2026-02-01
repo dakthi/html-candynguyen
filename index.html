@@ -149,6 +149,14 @@
 
         .entry-images {
             margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .entry-images img {
+            width: 100%;
+            height: auto;
         }
 
         .entry-meta {
@@ -581,7 +589,10 @@
 
                     let imageHTML = '';
                     if (post.images && post.images.length > 0) {
-                        imageHTML = `<div class="entry-images"><img src="${post.images[0]}" alt="" onclick="openLightbox('${post.images[0]}')"></div>`;
+                        const imagesHtml = post.images.map(img =>
+                            `<img src="${img}" alt="" onclick="openLightbox('${img}')">`
+                        ).join('');
+                        imageHTML = `<div class="entry-images">${imagesHtml}</div>`;
                     }
 
                     entry.innerHTML = `

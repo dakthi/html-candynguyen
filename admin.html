@@ -524,6 +524,15 @@
                             </td>
                         </tr>
                         <tr>
+                            <td valign="top"><label>Hình ảnh:</label></td>
+                            <td>
+                                <div id="new-images-list" style="margin-bottom: 10px;"></div>
+                                <input type="file" id="new-image-upload" accept="image/*" multiple style="margin-bottom: 5px;">
+                                <button type="button" class="btn" onclick="processNewImages()">+ Thêm ảnh</button>
+                                <div style="font-size: 9px; color: #666; margin-top: 5px;">Chọn nhiều ảnh cùng lúc. Tự động resize về 800px và chuyển sang .webp</div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td></td>
                             <td>
                                 <button type="submit" class="btn btn-primary">Tạo bài viết</button>
@@ -586,6 +595,15 @@
                         <tr>
                             <td><label>Ngày đăng:</label></td>
                             <td><input type="datetime-local" id="edit-time" required></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Hình ảnh:</label></td>
+                            <td>
+                                <div id="edit-images-list" style="margin-bottom: 10px;"></div>
+                                <input type="file" id="edit-image-upload" accept="image/*" multiple style="margin-bottom: 5px;">
+                                <button type="button" class="btn" onclick="processEditImages()">+ Thêm ảnh</button>
+                                <div style="font-size: 9px; color: #666; margin-top: 5px;">Chọn nhiều ảnh cùng lúc. Tự động resize về 800px và chuyển sang .webp</div>
+                            </td>
                         </tr>
                         <tr>
                             <td></td>
@@ -702,7 +720,128 @@
             document.getElementById('edit-text').value = post.body || '';
             document.getElementById('edit-mood').value = post.mood || '';
             document.getElementById('edit-time').value = new Date(post.time).toISOString().slice(0, 16);
+            renderEditImages(postId);
             document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function renderEditImages(postId) {
+            const post = posts[postId];
+            const container = document.getElementById('edit-images-list');
+
+            if (!post.images || post.images.length === 0) {
+                container.innerHTML = '<div style="font-size: 10px; color: #666;">Chưa có ảnh nào</div>';
+                return;
+            }
+
+            container.innerHTML = post.images.map((img, index) => `
+                <div style="display: inline-block; margin: 5px; border: 1px solid #ccc; padding: 5px; background: #f9f9f9;">
+                    <img src="${img}" style="width: 80px; height: 80px; object-fit: cover; display: block;">
+                    <button type="button" class="btn btn-danger" style="margin-top: 5px; font-size: 9px;" onclick="removeImageFromEdit(${index})">Xóa</button>
+                </div>
+            `).join('');
+        }
+
+        function removeImageFromEdit(index) {
+            const postId = document.getElementById('edit-post-id').value;
+            posts[postId].images.splice(index, 1);
+            renderEditImages(postId);
+        }
+
+        async function processEditImages() {
+            const fileInput = document.getElementById('edit-image-upload');
+            const files = fileInput.files;
+
+            if (files.length === 0) return;
+
+            showStatus('Đang xử lý ảnh...', 'info');
+
+            for (let file of files) {
+                try {
+                    const webpBlob = await resizeAndConvertToWebP(file);
+                    const postId = document.getElementById('edit-post-id').value;
+                    const timestamp = Date.now();
+                    const imageIndex = (posts[postId].images || []).length;
+                    const filename = `post_${postId}_${imageIndex}.webp`;
+                    const imagePath = `images/${filename}`;
+
+                    // Upload to GitHub
+                    await uploadImageToGitHub(webpBlob, imagePath);
+
+                    // Add to post images
+                    if (!posts[postId].images) posts[postId].images = [];
+                    posts[postId].images.push(imagePath);
+
+                    renderEditImages(postId);
+                } catch (e) {
+                    showStatus('Lỗi khi xử lý ảnh: ' + e.message, 'error');
+                }
+            }
+
+            fileInput.value = '';
+            showStatus('Đã thêm ảnh thành công!', 'success');
+        }
+
+        async function resizeAndConvertToWebP(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Resize to max 800px width
+                        if (width > 800) {
+                            height = (height * 800) / width;
+                            width = 800;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/webp', 0.85);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadImageToGitHub(blob, path) {
+            // Convert blob to base64
+            const base64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64data = reader.result.split(',')[1];
+                    resolve(base64data);
+                };
+                reader.readAsDataURL(blob);
+            });
+
+            // Upload to GitHub
+            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `Upload image ${path} (qua CMS)`,
+                    content: base64
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error('Upload failed');
+            }
         }
 
         function closeEditModal() {
@@ -767,6 +906,61 @@
             await savePosts('Chỉnh sửa bài viết');
         });
 
+        // New post image management
+        let newPostImages = [];
+
+        function renderNewImages() {
+            const container = document.getElementById('new-images-list');
+
+            if (newPostImages.length === 0) {
+                container.innerHTML = '<div style="font-size: 10px; color: #666;">Chưa có ảnh nào</div>';
+                return;
+            }
+
+            container.innerHTML = newPostImages.map((img, index) => `
+                <div style="display: inline-block; margin: 5px; border: 1px solid #ccc; padding: 5px; background: #f9f9f9;">
+                    <img src="${img}" style="width: 80px; height: 80px; object-fit: cover; display: block;">
+                    <button type="button" class="btn btn-danger" style="margin-top: 5px; font-size: 9px;" onclick="removeNewImage(${index})">Xóa</button>
+                </div>
+            `).join('');
+        }
+
+        function removeNewImage(index) {
+            newPostImages.splice(index, 1);
+            renderNewImages();
+        }
+
+        async function processNewImages() {
+            const fileInput = document.getElementById('new-image-upload');
+            const files = fileInput.files;
+
+            if (files.length === 0) return;
+
+            showStatus('Đang xử lý ảnh...', 'info');
+
+            for (let file of files) {
+                try {
+                    const webpBlob = await resizeAndConvertToWebP(file);
+                    const timestamp = Date.now();
+                    const random = Math.floor(Math.random() * 10000);
+                    const filename = `post_new_${timestamp}_${random}.webp`;
+                    const imagePath = `images/${filename}`;
+
+                    // Upload to GitHub
+                    await uploadImageToGitHub(webpBlob, imagePath);
+
+                    // Add to temporary array
+                    newPostImages.push(imagePath);
+                    renderNewImages();
+                } catch (e) {
+                    showStatus('Lỗi khi xử lý ảnh: ' + e.message, 'error');
+                }
+            }
+
+            fileInput.value = '';
+            showStatus('Đã thêm ảnh thành công!', 'success');
+        }
+
         // New post form submit
         document.getElementById('new-post-form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -783,12 +977,14 @@
                 likes: 0,
                 comments: 0,
                 shares: 0,
-                images: [],
+                images: [...newPostImages],
                 mood: mood || null
             };
 
             await savePosts('Thêm bài viết mới');
             this.reset();
+            newPostImages = [];
+            renderNewImages();
             showTab('posts');
         });
 
@@ -826,6 +1022,7 @@
 
         // Load posts on page load
         loadPosts();
+        renderNewImages();
     </script>
 </body>
 </html>
