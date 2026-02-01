@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 8: Brutalist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: black;
+            color: lime;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            border: 5px solid lime;
+        }
+
+        header {
+            background: lime;
+            color: black;
+            padding: 5px;
+            text-align: center;
+            border-bottom: 5px solid black;
+        }
+
+        header h1 {
+            font-size: 3em;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .post {
+            border-bottom: 5px solid lime;
+            padding: 20px;
+        }
+
+        .post:hover {
+            background: lime;
+            color: black;
+        }
+
+        .post-id {
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .post-text {
+            font-size: 1.1em;
+            line-height: 1.4;
+            margin: 20px 0;
+            word-break: break-word;
+        }
+
+        .post img {
+            width: 100%;
+            filter: contrast(200%) grayscale(100%);
+            border: 5px solid lime;
+            margin: 20px 0;
+        }
+
+        .post-meta {
+            font-size: 0.9em;
+            display: flex;
+            gap: 20px;
+        }
+
+        a {
+            color: lime;
+            text-decoration: none;
+            border-bottom: 2px solid lime;
+        }
+
+        a:hover {
+            background: lime;
+            color: black;
+        }
+
+        .warning {
+            background: lime;
+            color: black;
+            padding: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            border: 3px solid black;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: lime;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NGUYEN_TRAM_ANH.VN</h1>
+            <div>[ DIGITAL_CREATOR ]</div>
+        </header>
+
+        <div id="posts-container">
+            <div class="loading">LOADING_DATA...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const div = document.createElement('div');
+                    div.className = 'post';
+
+                    let displayText = post.text;
+                    if (displayText.length > 300) {
+                        displayText = displayText.substring(0, 300) + '...';
+                    }
+
+                    // Convert text to brutalist style (uppercase with underscores)
+                    const brutalistText = displayText
+                        .toUpperCase()
+                        .replace(/\s+/g, '_')
+                        .replace(/[àáạảãâầấậẩẫăằắặẳẵ]/gi, 'A')
+                        .replace(/[èéẹẻẽêềếệểễ]/gi, 'E')
+                        .replace(/[ìíịỉĩ]/gi, 'I')
+                        .replace(/[òóọỏõôồốộổỗơờớợởỡ]/gi, 'O')
+                        .replace(/[ùúụủũưừứựửữ]/gi, 'U')
+                        .replace(/[ỳýỵỷỹ]/gi, 'Y')
+                        .replace(/[đ]/gi, 'D')
+                        .replace(/[^A-Z0-9_]/g, '_');
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `
+                            <img src="../${post.images[0]}" alt="">
+                            <div class="warning">⚠ WARNING: HIGH_CONTRAST_CONTENT ⚠</div>
+                        `;
+                    }
+
+                    // Format date as timestamp
+                    const timestamp = new Date(post.date).toISOString();
+
+                    div.innerHTML = `
+                        <div class="post-id">[POST_ID: ${post.id}]</div>
+                        <div class="post-text">${brutalistText}</div>
+                        ${imageHTML}
+                        <div class="post-meta">
+                            <span>[LIKES: ${post.likes}]</span>
+                            <span>[COMMENTS: ${post.comments}]</span>
+                            <span>[TIME: ${timestamp}]</span>
+                        </div>
+                    `;
+
+                    container.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('posts-container').innerHTML = 
+                    '<div class="loading">ERROR_LOADING_DATA</div>';
+            });
+    </script>
+</body>
+</html>

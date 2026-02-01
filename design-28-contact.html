@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Talking and Exploring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
+            background: #ffffff;
+            color: #0b0c0c;
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: #1a4d7d;
+            height: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+
+        header {
+            margin-bottom: 0;
+            padding-bottom: 20px;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a4d7d;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #495057;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .header-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .social-link-text {
+            color: #1a4d7d;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .social-link-text:hover {
+            color: #8dc8a8;
+        }
+
+        .review-cta {
+            color: #1a4d7d;
+            background: #8dc8a8;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            padding: 6px 14px;
+            border: 2px solid #8dc8a8;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .review-cta:hover {
+            background: #1a4d7d;
+            border-color: #1a4d7d;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-social {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .review-cta {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        nav {
+            background: #1a4d7d;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0;
+            list-style: none;
+        }
+
+        .nav-links li {
+            flex: 1;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-color: #8dc8a8;
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom-color: #8dc8a8;
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            .nav-links li {
+                flex: 0 0 50%;
+            }
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .content-section h2 {
+            color: #1a4d7d;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #8dc8a8;
+            padding-bottom: 10px;
+        }
+
+        .content-section p {
+            color: #2c3e50;
+            font-size: 1em;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .contact-methods {
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .contact-methods table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .contact-methods th {
+            background: #1a4d7d;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #8dc8a8;
+        }
+
+        .contact-methods td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .contact-methods tr:last-child td {
+            border-bottom: none;
+        }
+
+        .contact-methods td:first-child {
+            color: #1a4d7d;
+            font-weight: 600;
+            width: 150px;
+        }
+
+        .contact-methods td a {
+            color: #1a4d7d;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .contact-methods td a:hover {
+            color: #8dc8a8;
+        }
+
+        @media (max-width: 768px) {
+            .contact-methods table,
+            .contact-methods thead,
+            .contact-methods tbody,
+            .contact-methods th,
+            .contact-methods td,
+            .contact-methods tr {
+                display: block;
+            }
+
+            .contact-methods thead {
+                display: none;
+            }
+
+            .contact-methods tr {
+                margin-bottom: 20px;
+                border: 2px solid #e0e0e0;
+            }
+
+            .contact-methods td {
+                text-align: left;
+                padding: 10px 15px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .contact-methods td:first-child {
+                background: #1a4d7d;
+                color: white;
+                font-weight: 700;
+                width: 100%;
+            }
+
+            .contact-methods tr:last-child td {
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .contact-methods td:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .contact-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #1a4d7d;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8dc8a8;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: #1a4d7d;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #8dc8a8;
+            color: #1a4d7d;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #1a4d7d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #8dc8a8;
+            color: #1a4d7d;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"></div>
+
+    <div class="container">
+        <header>
+            <img src="../logo.png" alt="Talking and Exploring" class="logo-img">
+            <div class="header-content">
+                <h1>Talking and Exploring</h1>
+                <p class="subtitle">Sharing stories and memories from our community walks through local neighbourhoods</p>
+                <div class="header-social">
+                    <a href="https://www.facebook.com/talkingandexploring/" target="_blank" class="social-link-text">Facebook</a>
+                    <a href="https://www.instagram.com/talkingandexploring/" target="_blank" class="social-link-text">Instagram</a>
+                    <span style="color: #6c757d; margin: 0 5px;">|</span>
+                    <a href="https://share.google/PrGiOCrnS2uBhJfYU" target="_blank" class="review-cta">Leave us a review on Google</a>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="design-28-clean-civic.html">STORIES</a></li>
+                <li><a href="design-28-upcoming-walks.html">UPCOMING WALKS</a></li>
+                <li><a href="design-28-about.html">ABOUT US</a></li>
+                <li><a href="design-28-contact.html" class="active">CONTACT</a></li>
+            </ul>
+        </nav>
+
+        <div class="content-section">
+            <h2>GET IN TOUCH</h2>
+            <p>We'd love to hear from you! Whether you have questions about our walks, suggestions for new routes, or want to get involved, please reach out.</p>
+
+            <div class="contact-methods">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Facebook</td>
+                            <td>Follow us and message us on Facebook for the quickest response.<br>
+                                <a href="https://www.facebook.com/talkingandexploring/" target="_blank">@talkingandexploring</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Instagram</td>
+                            <td>See photos from our walks and stay updated on upcoming events.<br>
+                                <a href="https://www.instagram.com/talkingandexploring/" target="_blank">@talkingandexploring</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>Send us an email for general inquiries.<br>
+                                <a href="mailto:dudzinskauk@gmail.com">dudzinskauk@gmail.com</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Eventbrite</td>
+                            <td>Book your place on upcoming walks.<br>
+                                <a href="https://www.eventbrite.co.uk/o/talking-exploring-25424912225" target="_blank">View events</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Google</td>
+                            <td>Find us and leave a review.<br>
+                                <a href="https://share.google/PrGiOCrnS2uBhJfYU" target="_blank">Google Business</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Do Something Good</td>
+                            <td>See our community projects in Ealing.<br>
+                                <a href="https://dosomethinggood.ealing.gov.uk/projects_landing/community-projects/page/6/?filter=town&v=ealing" target="_blank">View on DSG</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="contact-form">
+                <h3 style="color: #1a4d7d; margin-bottom: 20px;">Send us a message</h3>
+                <div id="formStatus" style="display: none; padding: 15px; margin-bottom: 20px; border-radius: 4px;"></div>
+                <form id="contactForm" action="#" method="POST">
+                    <div class="form-group">
+                        <label for="name">Your name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Your email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">Send message</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+                <h3 style="color: #1a4d7d; margin-bottom: 15px;">Stay Connected</h3>
+                <p>Follow us on social media to stay up to date with our latest walks and community stories.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/talkingandexploring/" target="_blank" class="social-link">
+                        Facebook
+                    </a>
+                    <a href="https://www.instagram.com/talkingandexploring/" target="_blank" class="social-link">
+                        Instagram
+                    </a>
+                    <a href="https://www.eventbrite.co.uk/o/talking-exploring-25424912225" target="_blank" class="social-link">
+                        Eventbrite
+                    </a>
+                    <a href="https://share.google/PrGiOCrnS2uBhJfYU" target="_blank" class="social-link">
+                        Google
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formStatus = document.getElementById('formStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            const formData = new FormData(e.target);
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch('http://178.128.41.146:3010/api/contact/talking-exploring', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        subject: formData.get('subject'),
+                        message: formData.get('message')
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Show success message
+                    formStatus.style.display = 'block';
+                    formStatus.style.background = '#e8f4f0';
+                    formStatus.style.color = '#1a4d7d';
+                    formStatus.style.border = '2px solid #8dc8a8';
+                    formStatus.textContent = result.message;
+
+                    // Reset form
+                    e.target.reset();
+                } else {
+                    throw new Error(result.error || 'Failed to send message');
+                }
+            } catch (error) {
+                // Show error message
+                formStatus.style.display = 'block';
+                formStatus.style.background = '#ffe6e6';
+                formStatus.style.color = '#d32f2f';
+                formStatus.style.border = '2px solid #d32f2f';
+                formStatus.textContent = error.message || 'Failed to send message. Please try again later.';
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send message';
+
+                // Scroll to status message
+                formStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    </script>
+</body>
+</html>

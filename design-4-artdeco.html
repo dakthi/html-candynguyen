@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 4: Art Deco (1930s)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Palatino', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #d4af37;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            border: 3px solid #d4af37;
+            padding: 40px;
+            background: #0f3460;
+            clip-path: polygon(5% 0%, 95% 0%, 100% 10%, 100% 90%, 95% 100%, 5% 100%, 0% 90%, 0% 10%);
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.3em;
+            font-style: italic;
+            letter-spacing: 3px;
+        }
+
+        .post {
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            position: relative;
+        }
+
+        .post::before,
+        .post::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #d4af37;
+        }
+
+        .post::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .post::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .post-title {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 15px;
+        }
+
+        .post-date {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #c4b5a0;
+        }
+
+        .post img {
+            width: 100%;
+            border: 5px solid #d4af37;
+            margin: 20px 0;
+            filter: sepia(40%) contrast(110%);
+        }
+
+        .post-text {
+            line-height: 2;
+            font-size: 1.1em;
+            text-align: justify;
+            color: #e8dcc8;
+        }
+
+        .post-meta {
+            margin-top: 25px;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 2px solid #d4af37;
+            font-style: italic;
+            color: #c4b5a0;
+        }
+
+        .ornament {
+            text-align: center;
+            font-size: 2em;
+            color: #d4af37;
+            margin: 20px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #d4af37;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nguyen Tram Anh</h1>
+            <p>Sống trong tâm tình biết ơn</p>
+        </header>
+
+        <div class="ornament">◆ ◇ ◆</div>
+
+        <div id="posts-container">
+            <div class="loading">Loading posts...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    if (index > 0) {
+                        const ornament = document.createElement('div');
+                        ornament.className = 'ornament';
+                        ornament.textContent = '◆ ◇ ◆';
+                        container.appendChild(ornament);
+                    }
+
+                    const article = document.createElement('article');
+                    article.className = 'post';
+
+                    let displayText = post.text;
+                    if (displayText.length > 300) {
+                        displayText = displayText.substring(0, 300) + '...';
+                    }
+
+                    // Format date in Art Deco style
+                    const date = new Date(post.date);
+                    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                  'July', 'August', 'September', 'October', 'November', 'December'];
+                    const formattedDate = `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `<img src="../${post.images[0]}" alt="">`;
+                    }
+
+                    // Extract a title from the first line or use truncated text
+                    const firstLine = post.text.split('\n')[0];
+                    const title = firstLine.length > 50 ? firstLine.substring(0, 50) : firstLine;
+
+                    article.innerHTML = `
+                        <h2 class="post-title">${title}</h2>
+                        <div class="post-date">${formattedDate}</div>
+                        ${imageHTML}
+                        <div class="post-text">${displayText}</div>
+                        <div class="post-meta">${post.likes} admirers ◆ ${post.comments} correspondences</div>
+                    `;
+
+                    container.appendChild(article);
+                });
+
+                // Add final ornament
+                const finalOrnament = document.createElement('div');
+                finalOrnament.className = 'ornament';
+                finalOrnament.textContent = '◆ ◇ ◆';
+                container.appendChild(finalOrnament);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('posts-container').innerHTML = 
+                    '<div class="loading">Error loading posts</div>';
+            });
+    </script>
+</body>
+</html>

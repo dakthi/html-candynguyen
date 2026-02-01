@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 28: Clean Civic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
+            background: #ffffff;
+            color: #0b0c0c;
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: #1a4d7d;
+            height: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+
+        header {
+            margin-bottom: 0;
+            padding-bottom: 20px;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a4d7d;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #495057;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .header-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .social-link-text {
+            color: #1a4d7d;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .social-link-text:hover {
+            color: #8dc8a8;
+        }
+
+        .review-cta {
+            color: #1a4d7d;
+            background: #8dc8a8;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            padding: 6px 14px;
+            border: 2px solid #8dc8a8;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .review-cta:hover {
+            background: #1a4d7d;
+            border-color: #1a4d7d;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-social {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .review-cta {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        nav {
+            background: #1a4d7d;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0;
+            list-style: none;
+        }
+
+        .nav-links li {
+            flex: 1;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-color: #8dc8a8;
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom-color: #8dc8a8;
+        }
+
+        .upcoming-highlight {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a4d7d 0%, #2a6a9d 100%);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .upcoming-highlight h2 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upcoming-highlight p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .upcoming-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .upcoming-detail {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .highlight-btn {
+            display: inline-block;
+            background: #8dc8a8;
+            color: #1a4d7d;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            .nav-links li {
+                flex: 0 0 50%;
+            }
+        }
+
+        .story {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .story:hover {
+            border-color: #8dc8a8;
+            box-shadow: 0 4px 8px rgba(26, 77, 125, 0.1);
+        }
+
+        .story-header {
+            margin-bottom: 15px;
+        }
+
+        .story-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .story-label {
+            background: #8dc8a8;
+            color: #1a4d7d;
+            padding: 4px 10px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 3px;
+        }
+
+        .story-date {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        .story-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #1a4d7d;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .story-content {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .story-image {
+            margin: 15px 0;
+            max-height: 500px;
+            border-radius: 4px;
+        }
+
+        .story-image img {
+            width: 100%;
+            max-height: 500px;
+            display: block;
+            object-fit: contain;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .story-image img:hover {
+            opacity: 0.9;
+        }
+
+        .image-caption {
+            background: #f3f2f1;
+            padding: 10px;
+            font-size: 0.85em;
+            color: #505a5f;
+            margin-top: -4px;
+        }
+
+
+        #stories-container .loading {
+            text-align: center;
+            padding: 60px;
+            color: #505a5f;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"></div>
+
+    <div class="container">
+        <header>
+            <img src="../logo.png" alt="Talking and Exploring" class="logo-img">
+            <div class="header-content">
+                <h1>Talking and Exploring</h1>
+                <p class="subtitle">Sharing stories and memories from our community walks through local neighbourhoods</p>
+                <div class="header-social">
+                    <a href="https://www.facebook.com/talkingandexploring/" target="_blank" class="social-link-text">Facebook</a>
+                    <a href="https://www.instagram.com/talkingandexploring/" target="_blank" class="social-link-text">Instagram</a>
+                    <span style="color: #6c757d; margin: 0 5px;">|</span>
+                    <a href="https://share.google/PrGiOCrnS2uBhJfYU" target="_blank" class="review-cta">Leave us a review on Google</a>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="design-28-clean-civic.html" class="active">STORIES</a></li>
+                <li><a href="design-28-upcoming-walks.html">UPCOMING WALKS</a></li>
+                <li><a href="design-28-about.html">ABOUT US</a></li>
+                <li><a href="design-28-contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+
+        <div class="upcoming-highlight">
+            <h2>Next Walk: Discovering Gunnersbury Park</h2>
+            <p>Join us for a relaxed 3-hour adventure exploring the park and the estate's history. We'll share stories and perspectives, finishing with coffee and chat at the new café.</p>
+            <div class="upcoming-details">
+                <div class="upcoming-detail">Sunday, 25 January 2026</div>
+                <div class="upcoming-detail">11:00 AM - 2:00 PM</div>
+                <div class="upcoming-detail">£5-£10 donation</div>
+            </div>
+            <a href="https://www.eventbrite.co.uk/o/talking-exploring-25424912225" target="_blank" class="highlight-btn">BOOK YOUR PLACE</a>
+        </div>
+
+        <div id="stories-container">
+            <div class="loading">Loading stories...</div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="">
+    </div>
+
+    <script>
+        const labels = ['Walk Story', 'Community Memory', 'Local History', 'Shared Experience', 'Neighbourhood Tale'];
+
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('stories-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const story = document.createElement('article');
+                    story.className = 'story';
+
+                    let displayText = post.text;
+                    if (displayText.length > 250) {
+                        displayText = displayText.substring(0, 250) + '...';
+                    }
+
+                    // Extract title
+                    const firstSentence = displayText.split(/[.!?]/)[0];
+                    const title = firstSentence.length > 60
+                        ? firstSentence.substring(0, 60) + '...'
+                        : firstSentence;
+
+                    const label = labels[index % labels.length];
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `
+                            <div class="story-image">
+                                <img src="../${post.images[0]}" alt="">
+                            </div>
+                        `;
+                    }
+
+                    story.innerHTML = `
+                        <div class="story-header">
+                            <div class="story-meta">
+                                <div class="story-label">${label}</div>
+                                <div class="story-date">${post.date_formatted}</div>
+                            </div>
+                            <h2 class="story-title">${title}</h2>
+                        </div>
+                        <div class="story-content">${displayText}</div>
+                        ${imageHTML}
+                    `;
+
+                    container.appendChild(story);
+                });
+
+                // Add click handlers for images
+                const images = document.querySelectorAll('.story-image img');
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImg = lightbox.querySelector('img');
+                const lightboxClose = lightbox.querySelector('.lightbox-close');
+
+                images.forEach(img => {
+                    img.addEventListener('click', () => {
+                        lightboxImg.src = img.src;
+                        lightbox.classList.add('active');
+                    });
+                });
+
+                lightboxClose.addEventListener('click', () => {
+                    lightbox.classList.remove('active');
+                });
+
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        lightbox.classList.remove('active');
+                    }
+                });
+
+                // Close lightbox with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                        lightbox.classList.remove('active');
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

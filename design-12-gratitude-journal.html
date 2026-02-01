@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 12: Gratitude Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #f5f1e8;
+            color: #5a4a42;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #8b7355;
+            font-weight: normal;
+            margin-bottom: 10px;
+        }
+
+        header .tagline {
+            font-style: italic;
+            color: #a08968;
+            font-size: 1.1em;
+        }
+
+        .entry {
+            background: white;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-left: 4px solid #d4a574;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .entry-date {
+            font-size: 0.9em;
+            color: #a08968;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .entry-text {
+            line-height: 1.8;
+            font-size: 1.05em;
+            text-align: justify;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+
+        .entry img {
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .entry-meta {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dotted #d4a574;
+            font-size: 0.9em;
+            color: #a08968;
+            display: flex;
+            gap: 20px;
+        }
+
+        .grateful-note {
+            background: #fef9f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 3px solid #d4a574;
+            font-style: italic;
+            color: #8b7355;
+        }
+
+        #posts-container .loading {
+            text-align: center;
+            padding: 40px;
+            color: #a08968;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nhật Ký Biết Ơn</h1>
+            <p class="tagline">Sống trong tâm tình biết ơn</p>
+        </header>
+
+        <div id="posts-container">
+            <div class="loading">Đang tải...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const entry = document.createElement('div');
+                    entry.className = 'entry';
+
+                    // Truncate long text
+                    let displayText = post.text;
+                    if (displayText.length > 600) {
+                        displayText = displayText.substring(0, 600) + '...';
+                    }
+
+                    let imagesHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imagesHTML = post.images.slice(0, 1).map(img =>
+                            `<img src="../${img}" alt="Post image">`
+                        ).join('');
+                    }
+
+                    entry.innerHTML = `
+                        <div class="entry-date">${post.date_formatted}</div>
+                        <div class="grateful-note">
+                            🙏 Hôm nay tôi biết ơn về...
+                        </div>
+                        ${imagesHTML}
+                        <div class="entry-text">${displayText}</div>
+                        <div class="entry-meta">
+                            <span>❤️ ${post.likes} lòng biết ơn</span>
+                            <span>💬 ${post.comments} suy ngẫm</span>
+                        </div>
+                    `;
+
+                    container.appendChild(entry);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading posts:', error);
+                document.getElementById('posts-container').innerHTML =
+                    '<div class="loading">Không thể tải bài viết</div>';
+            });
+    </script>
+</body>
+</html>

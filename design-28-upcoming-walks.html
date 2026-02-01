@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Walks - Talking and Exploring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
+            background: #ffffff;
+            color: #0b0c0c;
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: #1a4d7d;
+            height: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+
+        header {
+            margin-bottom: 0;
+            padding-bottom: 20px;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a4d7d;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #495057;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .header-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .social-link-text {
+            color: #1a4d7d;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .social-link-text:hover {
+            color: #8dc8a8;
+        }
+
+        .review-cta {
+            color: #1a4d7d;
+            background: #8dc8a8;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            padding: 6px 14px;
+            border: 2px solid #8dc8a8;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .review-cta:hover {
+            background: #1a4d7d;
+            border-color: #1a4d7d;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-social {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .review-cta {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        nav {
+            background: #1a4d7d;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0;
+            list-style: none;
+        }
+
+        .nav-links li {
+            flex: 1;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-color: #8dc8a8;
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom-color: #8dc8a8;
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            .nav-links li {
+                flex: 0 0 50%;
+            }
+        }
+
+        .page-intro {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #1a4d7d;
+            color: white;
+            border: 2px solid #1a4d7d;
+        }
+
+        .page-intro h2 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .page-intro p {
+            color: white;
+            font-size: 1em;
+        }
+
+        .walk {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .walk:hover {
+            border-color: #8dc8a8;
+            box-shadow: 0 4px 8px rgba(26, 77, 125, 0.1);
+        }
+
+        .walk-header {
+            margin-bottom: 15px;
+        }
+
+        .walk-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .walk-status {
+            background: #8dc8a8;
+            color: #1a4d7d;
+            padding: 4px 10px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 3px;
+        }
+
+        .walk-status.full {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .walk-date {
+            font-size: 0.85em;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .walk-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #1a4d7d;
+            line-height: 1.3;
+            margin: 0 0 10px 0;
+        }
+
+        .walk-description {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .walk-details {
+            margin: 15px 0;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .walk-details table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .walk-details td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .walk-details td:first-child {
+            color: #6c757d;
+            font-weight: 600;
+            width: 120px;
+            vertical-align: top;
+        }
+
+        .walk-details td:last-child {
+            color: #1a4d7d;
+            font-weight: 600;
+        }
+
+        .walk-details tr:last-child td {
+            border-bottom: none;
+        }
+
+        @media (max-width: 600px) {
+            .walk-details td:first-child {
+                width: 100px;
+                font-size: 0.85em;
+            }
+        }
+
+        .walk-cta {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #1a4d7d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #8dc8a8;
+            color: #1a4d7d;
+        }
+
+        .btn.disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .no-walks {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-walks h3 {
+            color: #1a4d7d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"></div>
+
+    <div class="container">
+        <header>
+            <img src="../logo.png" alt="Talking and Exploring" class="logo-img">
+            <div class="header-content">
+                <h1>Talking and Exploring</h1>
+                <p class="subtitle">Sharing stories and memories from our community walks through local neighbourhoods</p>
+                <div class="header-social">
+                    <a href="https://www.facebook.com/talkingandexploring/" target="_blank" class="social-link-text">Facebook</a>
+                    <a href="https://www.instagram.com/talkingandexploring/" target="_blank" class="social-link-text">Instagram</a>
+                    <span style="color: #6c757d; margin: 0 5px;">|</span>
+                    <a href="https://share.google/PrGiOCrnS2uBhJfYU" target="_blank" class="review-cta">Leave us a review on Google</a>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="design-28-clean-civic.html">STORIES</a></li>
+                <li><a href="design-28-upcoming-walks.html" class="active">UPCOMING WALKS</a></li>
+                <li><a href="design-28-about.html">ABOUT US</a></li>
+                <li><a href="design-28-contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-intro">
+            <h2>Join our community walks</h2>
+            <p>Explore local neighbourhoods, discover hidden stories, and connect with fellow walkers. All walks are guided and suitable for various fitness levels.</p>
+        </div>
+
+        <div id="walks-container">
+            <!-- Sample walk cards -->
+            <div class="walk">
+                <div class="walk-header">
+                    <div class="walk-meta">
+                        <div class="walk-status">Open</div>
+                        <div class="walk-date">Sunday, 25 January 2026</div>
+                    </div>
+                    <h2 class="walk-title">Discovering Gunnersbury Park</h2>
+                </div>
+                <div class="walk-description">
+                    Join us for a relaxed 3-hour adventure exploring the park and the estate's history. We'll share stories and perspectives, finishing with coffee and chat at the new café. A wonderful way to start the new year together!
+                </div>
+                <div class="walk-details">
+                    <table>
+                        <tr>
+                            <td>Meeting Point</td>
+                            <td>Gunnersbury Park Entrance</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>11:00 AM - 2:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td>Cost</td>
+                            <td>£5-£10 donation</td>
+                        </tr>
+                        <tr>
+                            <td>Spaces</td>
+                            <td>Few remaining</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="walk-cta">
+                    <a href="#" class="btn">BOOK YOUR PLACE</a>
+                </div>
+            </div>
+
+            <div class="walk">
+                <div class="walk-header">
+                    <div class="walk-meta">
+                        <div class="walk-status">Open</div>
+                        <div class="walk-date">Saturday, 8 February 2026</div>
+                    </div>
+                    <h2 class="walk-title">Black Histories Walk in West Ealing</h2>
+                </div>
+                <div class="walk-description">
+                    Explore the rich Black history of West Ealing, including visits to community landmarks and stories of local heroes. We'll stop at the Huntley Archives and learn about the Walter Rodney Bookshop's legacy.
+                </div>
+                <div class="walk-details">
+                    <table>
+                        <tr>
+                            <td>Meeting Point</td>
+                            <td>West Ealing Station</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>10:00 AM - 1:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td>Cost</td>
+                            <td>Free (donations welcome)</td>
+                        </tr>
+                        <tr>
+                            <td>Spaces</td>
+                            <td>Available</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="walk-cta">
+                    <a href="#" class="btn">BOOK YOUR PLACE</a>
+                </div>
+            </div>
+
+            <div class="walk">
+                <div class="walk-header">
+                    <div class="walk-meta">
+                        <div class="walk-status">Open</div>
+                        <div class="walk-date">Sunday, 22 February 2026</div>
+                    </div>
+                    <h2 class="walk-title">Acton's Disappearing Murals</h2>
+                </div>
+                <div class="walk-description">
+                    A guided walk discovering street art and murals around Acton. We'll explore hidden artworks, learn about local artists, and discuss the changing face of our neighbourhood through its public art.
+                </div>
+                <div class="walk-details">
+                    <table>
+                        <tr>
+                            <td>Meeting Point</td>
+                            <td>East Acton Station</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>2:00 PM - 4:30 PM</td>
+                        </tr>
+                        <tr>
+                            <td>Cost</td>
+                            <td>£5-£10 donation</td>
+                        </tr>
+                        <tr>
+                            <td>Spaces</td>
+                            <td>Available</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="walk-cta">
+                    <a href="#" class="btn">BOOK YOUR PLACE</a>
+                </div>
+            </div>
+
+            <div class="walk">
+                <div class="walk-header">
+                    <div class="walk-meta">
+                        <div class="walk-status full">Fully Booked</div>
+                        <div class="walk-date">Saturday, 14 December 2025</div>
+                    </div>
+                    <h2 class="walk-title">Christmas Carol Service Walk</h2>
+                </div>
+                <div class="walk-description">
+                    An evening walk through Acton finishing at St Dunstan's Church for a beautiful Christmas carol service. Experience the festive atmosphere and enjoy socialising at a historic coaching inn afterwards.
+                </div>
+                <div class="walk-details">
+                    <table>
+                        <tr>
+                            <td>Meeting Point</td>
+                            <td>St Dunstan's Church</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>6:00 PM - 8:30 PM</td>
+                        </tr>
+                        <tr>
+                            <td>Cost</td>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <td>Spaces</td>
+                            <td>Fully booked</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="walk-cta">
+                    <a href="#" class="btn disabled">FULLY BOOKED</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Future: Load walks from JSON or API
+    </script>
+</body>
+</html>

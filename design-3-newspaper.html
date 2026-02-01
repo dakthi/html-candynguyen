@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 3: Vintage Newspaper (1920s)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: #f4f1e8;
+            color: #222;
+            padding: 40px 20px;
+        }
+
+        .newspaper {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #faf8f0;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            border: 2px solid #333;
+        }
+
+        .masthead {
+            text-align: center;
+            border-top: 4px double #333;
+            border-bottom: 4px double #333;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .masthead h1 {
+            font-size: 3.5em;
+            font-weight: bold;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .masthead .tagline {
+            font-size: 1em;
+            font-style: italic;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .columns {
+            column-count: 2;
+            column-gap: 40px;
+            column-rule: 1px solid #ccc;
+        }
+
+        .article {
+            break-inside: avoid;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .article-headline {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .article-date {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .article img {
+            width: 100%;
+            margin: 15px 0;
+            border: 3px solid #333;
+            filter: grayscale(100%) sepia(20%);
+        }
+
+        .article-text {
+            text-align: justify;
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        .article-text::first-letter {
+            font-size: 3em;
+            font-weight: bold;
+            float: left;
+            line-height: 1;
+            margin-right: 5px;
+        }
+
+        .article-meta {
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <div class="masthead">
+            <h1>The Daily Chronicle</h1>
+            <div class="tagline">Sống trong tâm tình biết ơn</div>
+        </div>
+
+        <div class="columns" id="posts-container">
+            <div class="loading" style="text-align: center; padding: 40px; color: #999;">Đang tải bài viết...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const article = document.createElement('article');
+                    article.className = 'article';
+
+                    let displayText = post.text;
+                    if (displayText.length > 350) {
+                        displayText = displayText.substring(0, 350) + '...';
+                    }
+
+                    // Extract a headline from first sentence
+                    const firstSentence = displayText.split(/[.!?]/)[0];
+                    const headline = firstSentence.length > 50
+                        ? firstSentence.substring(0, 50) + '...'
+                        : firstSentence;
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `<img src="../${post.images[0]}" alt="">`;
+                    }
+
+                    article.innerHTML = `
+                        <h2 class="article-headline">${headline}</h2>
+                        <div class="article-date">${post.date_formatted}</div>
+                        ${imageHTML}
+                        <div class="article-text">${displayText}</div>
+                        <div class="article-meta">${post.likes} độc giả · ${post.comments} thư phản hồi</div>
+                    `;
+
+                    container.appendChild(article);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 16: Watercolor Scrapbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            background: linear-gradient(135deg, #ffd1dc 0%, #ffebf0 50%, #e6f3ff 100%);
+            padding: 40px 20px;
+        }
+
+        .scrapbook {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            background: rgba(255,255,255,0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #ff6b9d, #c471ed, #12c2e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .post-card {
+            background: white;
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            position: relative;
+            transform: rotate(-1deg);
+        }
+
+        .post-card:nth-child(even) {
+            transform: rotate(1deg);
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 30px;
+            width: 80px;
+            height: 25px;
+            background: rgba(255, 182, 193, 0.6);
+            border-radius: 2px;
+            transform: rotate(-5deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .watercolor-blob {
+            position: absolute;
+            opacity: 0.3;
+            border-radius: 50%;
+        }
+
+        .blob-1 {
+            top: -20px;
+            left: -20px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #ffd1dc, transparent);
+        }
+
+        .blob-2 {
+            bottom: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #e6f3ff, transparent);
+        }
+
+        .post-date {
+            font-size: 0.9em;
+            color: #ff6b9d;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .post-text {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        .post-card img {
+            width: 100%;
+            border-radius: 15px;
+            margin: 20px 0;
+            filter: saturate(110%) brightness(105%);
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #c471ed;
+            font-family: Arial, sans-serif;
+        }
+
+        #posts-container .loading {
+            text-align: center;
+            padding: 60px;
+            font-size: 1.5em;
+            color: #ff6b9d;
+        }
+    </style>
+</head>
+<body>
+    <div class="scrapbook">
+        <header>
+            <h1>✨ Nguyen Tram Anh ✨</h1>
+            <p style="font-family: Georgia; color: #888;">Sống trong tâm tình biết ơn 🌸</p>
+        </header>
+
+        <div id="posts-container">
+            <div class="loading">Đang tải...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+
+                    let displayText = post.text;
+                    if (displayText.length > 400) {
+                        displayText = displayText.substring(0, 400) + '...';
+                    }
+
+                    let imagesHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imagesHTML = post.images.slice(0, 2).map(img =>
+                            `<img src="../${img}" alt="">`
+                        ).join('');
+                    }
+
+                    card.innerHTML = `
+                        <div class="watercolor-blob blob-1"></div>
+                        <div class="watercolor-blob blob-2"></div>
+                        <div class="post-date">${post.date_formatted}</div>
+                        <div class="post-text">${displayText}</div>
+                        ${imagesHTML}
+                        <div class="post-meta">
+                            <span>💕 ${post.likes}</span>
+                            <span>💬 ${post.comments}</span>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>

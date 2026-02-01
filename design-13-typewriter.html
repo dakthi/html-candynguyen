@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 13: Typewriter Memoir</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Courier', monospace;
+            background: #e8dcc8;
+            color: #2a2a2a;
+            padding: 40px 20px;
+        }
+
+        .typewriter-page {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 80px 60px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .typewriter-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                #e0e0e0 2px,
+                #e0e0e0 3px
+            );
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 3px double #2a2a2a;
+        }
+
+        header h1 {
+            font-size: 2em;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1em;
+            letter-spacing: 2px;
+        }
+
+        .entry {
+            margin-bottom: 50px;
+            page-break-inside: avoid;
+        }
+
+        .entry-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 10px;
+        }
+
+        .entry-date {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .entry-text {
+            line-height: 2;
+            font-size: 1em;
+            text-align: justify;
+            white-space: pre-wrap;
+            margin: 20px 0;
+        }
+
+        .entry img {
+            width: 100%;
+            filter: grayscale(100%) contrast(110%);
+            border: 2px solid #2a2a2a;
+            margin: 30px 0;
+            padding: 10px;
+            background: #f5f5f5;
+        }
+
+        .entry-meta {
+            font-size: 0.85em;
+            text-align: right;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dotted #666;
+        }
+
+        .page-mark {
+            text-align: center;
+            margin: 40px 0;
+            font-size: 1.5em;
+        }
+
+        #posts-container .loading {
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="typewriter-page">
+        <header>
+            <h1>NGUYEN TRAM ANH</h1>
+            <p>MEMOIR · 2021-2025</p>
+        </header>
+
+        <div id="posts-container">
+            <div class="loading">LOADING...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const entry = document.createElement('div');
+                    entry.className = 'entry';
+
+                    let displayText = post.text;
+                    if (displayText.length > 500) {
+                        displayText = displayText.substring(0, 500) + '...';
+                    }
+
+                    let imagesHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imagesHTML = post.images.slice(0, 1).map(img =>
+                            `<img src="../${img}" alt="">`
+                        ).join('');
+                    }
+
+                    entry.innerHTML = `
+                        <div class="entry-header">
+                            <div class="entry-date">${post.date_formatted.toUpperCase()}</div>
+                        </div>
+                        <div class="entry-text">${displayText}</div>
+                        ${imagesHTML}
+                        <div class="entry-meta">
+                            [${post.likes} REACTIONS · ${post.comments} COMMENTS]
+                        </div>
+                    `;
+
+                    container.appendChild(entry);
+
+                    if (index < posts.length - 1) {
+                        const pageMark = document.createElement('div');
+                        pageMark.className = 'page-mark';
+                        pageMark.textContent = '* * *';
+                        container.appendChild(pageMark);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('posts-container').innerHTML =
+                    '<div class="loading">ERROR LOADING POSTS</div>';
+            });
+    </script>
+</body>
+</html>

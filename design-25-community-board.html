@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 25: Community Notice Board</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: linear-gradient(135deg, #5a3e36 0%, #3e2723 100%);
+            padding: 30px 20px;
+        }
+
+        .board {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #d4a574;
+            padding: 50px;
+            box-shadow:
+                inset 0 0 0 20px #8b6f47,
+                inset 0 0 0 22px #5a4a3a,
+                0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .board::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background-image:
+                radial-gradient(circle at 2px 2px, #8b6f47 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: white;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: rotate(-1deg);
+            border: 3px solid #e74c3c;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .notices {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .notice {
+            background: #fef9e7;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            transform: rotate(var(--rotation));
+            transition: transform 0.3s, z-index 0.3s;
+        }
+
+        .notice:nth-child(odd) { --rotation: -2deg; }
+        .notice:nth-child(even) { --rotation: 2deg; }
+        .notice:nth-child(3n) { --rotation: -1deg; }
+
+        .notice:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 10;
+        }
+
+        /* Pushpin */
+        .notice::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #e74c3c, #c0392b);
+            border-radius: 50% 50% 50% 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            z-index: 1;
+        }
+
+        .notice-date {
+            font-size: 0.85em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .notice-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+
+        .notice-text {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        .notice-image {
+            margin: 15px 0;
+        }
+
+        .notice-image img {
+            width: 100%;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .notice-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #7f8c8d;
+            padding-top: 10px;
+            border-top: 1px dashed #bdc3c7;
+        }
+
+        #notices-container.loading {
+            text-align: center;
+            padding: 60px;
+            color: #5a4a3a;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="board">
+        <header>
+            <h1>Community Walk Board</h1>
+            <p>Stories, Events & Shared Memories</p>
+        </header>
+
+        <div class="notices" id="notices-container">
+            <div class="loading">Pinning notices...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('notices-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const notice = document.createElement('div');
+                    notice.className = 'notice';
+
+                    let displayText = post.text;
+                    if (displayText.length > 200) {
+                        displayText = displayText.substring(0, 200) + '...';
+                    }
+
+                    // Extract title
+                    const firstSentence = displayText.split(/[.!?]/)[0];
+                    const title = firstSentence.length > 45
+                        ? firstSentence.substring(0, 45) + '...'
+                        : firstSentence;
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `
+                            <div class="notice-image">
+                                <img src="../${post.images[0]}" alt="">
+                            </div>
+                        `;
+                    }
+
+                    notice.innerHTML = `
+                        <div class="notice-date">${post.date_formatted}</div>
+                        <div class="notice-title">${title}</div>
+                        <div class="notice-text">${displayText}</div>
+                        ${imageHTML}
+                        <div class="notice-footer">
+                            <span>❤️ ${post.likes}</span>
+                            <span>💬 ${post.comments}</span>
+                        </div>
+                    `;
+
+                    container.appendChild(notice);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

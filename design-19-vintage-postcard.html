@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 19: Vintage Postcard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            background: #d4b896;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: #f5e6d3;
+            padding: 30px;
+            border: 3px double #8b6f47;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #5a4a3a;
+            margin-bottom: 10px;
+        }
+
+        .postcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .postcard {
+            background: #f9f5ee;
+            border: 1px solid #c4a57b;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .postcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+        }
+
+        .postcard img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            filter: sepia(30%) contrast(110%);
+            border-bottom: 2px solid #c4a57b;
+        }
+
+        .postcard-content {
+            padding: 20px;
+        }
+
+        .postmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #8b6f47;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.9);
+            font-size: 0.7em;
+            color: #8b6f47;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .postcard-date {
+            font-size: 0.85em;
+            color: #8b6f47;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .postcard-text {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #4a4035;
+            height: 120px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .postcard-stamp {
+            position: absolute;
+            top: 270px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b6f47, #c4a57b);
+            border: 2px solid #5a4a3a;
+            transform: rotate(15deg);
+        }
+
+        .postcard-meta {
+            font-size: 0.8em;
+            color: #999;
+            border-top: 1px dashed #c4a57b;
+            padding-top: 10px;
+        }
+
+        #postcards-container .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            color: #8b6f47;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📮 Greetings from Saigon</h1>
+            <p style="font-style: italic; color: #8b6f47;">Nguyen Tram Anh's Travel Diary</p>
+        </header>
+
+        <div class="postcard-grid" id="postcards-container">
+            <div class="loading">Loading postcards...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('postcards-container');
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'postcard';
+
+                    let displayText = post.text;
+                    if (displayText.length > 200) {
+                        displayText = displayText.substring(0, 200) + '...';
+                    }
+
+                    const imageUrl = (post.images && post.images.length > 0)
+                        ? `../${post.images[0]}`
+                        : 'https://via.placeholder.com/400x250/c4a57b/ffffff?text=Memory';
+
+                    // Format date as stamp
+                    const dateShort = post.date_formatted.split(',')[0];
+
+                    card.innerHTML = `
+                        <div class="postmark">HCMC<br>${dateShort}</div>
+                        <div class="postcard-stamp"></div>
+                        <img src="${imageUrl}" alt="">
+                        <div class="postcard-content">
+                            <div class="postcard-date">${post.date_formatted}</div>
+                            <div class="postcard-text">${displayText}</div>
+                            <div class="postcard-meta">❤️ ${post.likes} · 💬 ${post.comments}</div>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

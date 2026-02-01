@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 22: British Street Signs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: #2c3e50;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: #1a252f;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border: 8px solid #34495e;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .street-sign {
+            background: linear-gradient(135deg, #0a3d62 0%, #1e5a7d 100%);
+            color: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 8px solid #f8f9fa;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .street-sign::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: #34495e;
+            z-index: -1;
+        }
+
+        .sign-location {
+            font-size: 2em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .sign-borough {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .sign-text {
+            line-height: 1.7;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-left: 4px solid #f39c12;
+        }
+
+        .sign-image {
+            margin: 20px 0;
+        }
+
+        .sign-image img {
+            width: 100%;
+            border: 6px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .sign-meta {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.2);
+            font-size: 0.9em;
+        }
+
+        .yellow-box {
+            background: #f39c12;
+            color: #1a252f;
+            padding: 4px 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        #signs-container .loading {
+            background: #1a252f;
+            color: white;
+            padding: 60px;
+            text-align: center;
+            border: 8px solid #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LONDON WALKS</h1>
+            <p>Historical Routes & Stories</p>
+        </header>
+
+        <div id="signs-container">
+            <div class="loading">Loading street stories...</div>
+        </div>
+    </div>
+
+    <script>
+        const boroughs = [
+            'WESTMINSTER', 'CAMDEN', 'ISLINGTON', 'HACKNEY',
+            'TOWER HAMLETS', 'SOUTHWARK', 'LAMBETH', 'WANDSWORTH',
+            'KENSINGTON & CHELSEA', 'CITY OF LONDON'
+        ];
+
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('signs-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const sign = document.createElement('div');
+                    sign.className = 'street-sign';
+
+                    let displayText = post.text;
+                    if (displayText.length > 350) {
+                        displayText = displayText.substring(0, 350) + '...';
+                    }
+
+                    // Extract location-like title from first part
+                    const firstPart = displayText.split(/[.!?]/)[0];
+                    const location = firstPart.length > 40
+                        ? firstPart.substring(0, 40).toUpperCase()
+                        : firstPart.toUpperCase();
+
+                    // Random borough
+                    const borough = boroughs[index % boroughs.length];
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `
+                            <div class="sign-image">
+                                <img src="../${post.images[0]}" alt="">
+                            </div>
+                        `;
+                    }
+
+                    sign.innerHTML = `
+                        <div class="sign-location">${location}</div>
+                        <div class="sign-borough">${borough}</div>
+                        <div class="sign-text">${displayText}</div>
+                        ${imageHTML}
+                        <div class="sign-meta">
+                            <div>
+                                <span class="yellow-box">${post.date_formatted}</span>
+                            </div>
+                            <div>
+                                ❤️ ${post.likes} &nbsp; 💬 ${post.comments}
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(sign);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

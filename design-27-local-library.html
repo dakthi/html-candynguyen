@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 27: Local Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #e9e5da;
+            color: #2c2416;
+        }
+
+        .library {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #faf8f5;
+            min-height: 100vh;
+        }
+
+        .shelf-top {
+            background: linear-gradient(180deg, #8b7355 0%, #6d5a44 100%);
+            height: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        header {
+            background: white;
+            padding: 50px 40px 40px;
+            border-bottom: 3px solid #d4a574;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            color: #2c2416;
+            margin-bottom: 12px;
+            font-weight: normal;
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #6d5a44;
+            font-style: italic;
+        }
+
+        .catalog-number {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #8b7355;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 50px 0 30px;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: #d4a574;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #8b7355;
+            font-weight: normal;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .story-entry {
+            background: white;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #d4a574;
+        }
+
+        .call-number {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #8b7355;
+            margin-bottom: 15px;
+            padding: 5px 10px;
+            background: #f5f1e8;
+            display: inline-block;
+        }
+
+        .story-header {
+            margin-bottom: 20px;
+        }
+
+        .story-heading {
+            font-size: 1.5em;
+            color: #2c2416;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .story-date {
+            font-size: 0.95em;
+            color: #8b7355;
+            font-style: italic;
+        }
+
+        .story-body {
+            line-height: 1.9;
+            font-size: 1.05em;
+            color: #2c2416;
+            margin-bottom: 20px;
+        }
+
+        .story-body::first-letter {
+            font-size: 3em;
+            float: left;
+            line-height: 0.8;
+            margin: 10px 10px 0 0;
+            color: #8b7355;
+        }
+
+        .story-photo {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .story-photo img {
+            max-width: 100%;
+            border: 1px solid #d4a574;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .photo-caption {
+            font-size: 0.9em;
+            color: #6d5a44;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .checkout-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px dashed #d4a574;
+            font-size: 0.9em;
+            color: #6d5a44;
+        }
+
+        .stamp {
+            font-family: 'Courier New', monospace;
+            color: #8b7355;
+            font-weight: bold;
+        }
+
+        #entries-container .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8b7355;
+        }
+    </style>
+</head>
+<body>
+    <div class="library">
+        <div class="shelf-top"></div>
+
+        <header>
+            <h1>Community Archive</h1>
+            <p>Stories & Memories from Our Walks</p>
+            <div class="catalog-number">CAT. NO. WALK-2024</div>
+        </header>
+
+        <div class="content">
+            <div id="entries-container">
+                <div class="loading">Retrieving from archives...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('entries-container');
+                container.innerHTML = '';
+
+                let currentSection = null;
+
+                posts.forEach((post, index) => {
+                    // Add section divider every 3 posts
+                    if (index % 3 === 0) {
+                        const sectionNum = Math.floor(index / 3) + 1;
+                        const divider = document.createElement('div');
+                        divider.className = 'section-divider';
+                        divider.innerHTML = `<span class="section-title">Section ${sectionNum}</span>`;
+                        container.appendChild(divider);
+                    }
+
+                    const entry = document.createElement('div');
+                    entry.className = 'story-entry';
+
+                    let displayText = post.text;
+                    if (displayText.length > 450) {
+                        displayText = displayText.substring(0, 450) + '...';
+                    }
+
+                    // Extract heading
+                    const firstLine = displayText.split(/[.!?\n]/)[0];
+                    const heading = firstLine.length > 60
+                        ? firstLine.substring(0, 60) + '...'
+                        : firstLine;
+
+                    // Generate call number
+                    const year = new Date(post.date).getFullYear();
+                    const callNumber = `${year}.${String(index + 1).padStart(3, '0')}.WALK`;
+
+                    let photoHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        photoHTML = `
+                            <div class="story-photo">
+                                <img src="../${post.images[0]}" alt="">
+                                <div class="photo-caption">Photograph from collection</div>
+                            </div>
+                        `;
+                    }
+
+                    entry.innerHTML = `
+                        <div class="call-number">${callNumber}</div>
+                        <div class="story-header">
+                            <h3 class="story-heading">${heading}</h3>
+                            <div class="story-date">${post.date_formatted}</div>
+                        </div>
+                        <div class="story-body">${displayText}</div>
+                        ${photoHTML}
+                        <div class="checkout-info">
+                            <span>${post.likes} readers</span>
+                            <span class="stamp">COMMUNITY COLLECTION</span>
+                            <span>${post.comments} annotations</span>
+                        </div>
+                    `;
+
+                    container.appendChild(entry);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

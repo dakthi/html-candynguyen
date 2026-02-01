@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 18: Warm Earthy Minimal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #f8f6f1;
+            color: #4a4035;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e8d5c4;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            color: #8b7355;
+            font-weight: normal;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            color: #a08968;
+            font-size: 1em;
+            font-style: italic;
+        }
+
+        .post {
+            margin-bottom: 60px;
+        }
+
+        .post-date {
+            font-size: 0.9em;
+            color: #b8a490;
+            margin-bottom: 20px;
+        }
+
+        .post-text {
+            line-height: 1.9;
+            font-size: 1.05em;
+            color: #5a4a3a;
+            margin-bottom: 24px;
+            white-space: pre-wrap;
+        }
+
+        .post img {
+            width: 100%;
+            margin: 28px 0;
+            border-radius: 2px;
+            filter: sepia(5%) contrast(98%);
+        }
+
+        .post-meta {
+            font-size: 0.85em;
+            color: #b8a490;
+            padding-top: 16px;
+            border-top: 1px solid #e8d5c4;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #d4c4b0;
+            margin: 50px auto;
+        }
+
+        #posts-container .loading {
+            text-align: center;
+            padding: 60px;
+            color: #b8a490;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nguyen Tram Anh</h1>
+            <p>Sống trong tâm tình biết ơn</p>
+        </header>
+
+        <div id="posts-container">
+            <div class="loading">Đang tải...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const article = document.createElement('article');
+                    article.className = 'post';
+
+                    let displayText = post.text;
+                    if (displayText.length > 500) {
+                        displayText = displayText.substring(0, 500) + '...';
+                    }
+
+                    let imagesHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imagesHTML = post.images.slice(0, 1).map(img =>
+                            `<img src="../${img}" alt="">`
+                        ).join('');
+                    }
+
+                    article.innerHTML = `
+                        <div class="post-date">${post.date_formatted}</div>
+                        <div class="post-text">${displayText}</div>
+                        ${imagesHTML}
+                        <div class="post-meta">${post.likes} lượt thích · ${post.comments} bình luận</div>
+                    `;
+
+                    container.appendChild(article);
+
+                    if (index < posts.length - 1) {
+                        const divider = document.createElement('div');
+                        divider.className = 'divider';
+                        container.appendChild(divider);
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

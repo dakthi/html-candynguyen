@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 15: Victorian Diary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Georgia', serif;
+            background: #2d1b0e;
+            color: #3a2a1a;
+            padding: 40px 20px;
+        }
+
+        .diary {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f4e8d8;
+            padding: 60px 50px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border: 15px solid #5a4a3a;
+            position: relative;
+        }
+
+        .ornament {
+            text-align: center;
+            font-size: 2em;
+            color: #8b7355;
+            margin: 20px 0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-top: 3px double #8b7355;
+            border-bottom: 3px double #8b7355;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 3em;
+            color: #5a4a3a;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        header .subtitle {
+            font-size: 1.3em;
+            color: #8b7355;
+            font-style: italic;
+        }
+
+        .entry {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid #c4a57b;
+        }
+
+        .entry-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .entry-date {
+            font-size: 1.1em;
+            font-style: italic;
+            color: #8b7355;
+            letter-spacing: 2px;
+        }
+
+        .dropcap::first-letter {
+            float: left;
+            font-size: 5em;
+            line-height: 0.8;
+            margin: 5px 10px 0 0;
+            color: #8b7355;
+            font-style: italic;
+        }
+
+        .entry-text {
+            line-height: 1.9;
+            font-size: 1.1em;
+            text-align: justify;
+            color: #3a2a1a;
+            white-space: pre-wrap;
+        }
+
+        .entry img {
+            width: 100%;
+            margin: 25px 0;
+            border: 8px solid #8b7355;
+            padding: 5px;
+            background: white;
+            filter: sepia(40%);
+        }
+
+        .entry-footer {
+            margin-top: 20px;
+            text-align: right;
+            font-style: italic;
+            color: #8b7355;
+            font-size: 0.95em;
+        }
+
+        #posts-container .loading {
+            text-align: center;
+            padding: 40px;
+            font-style: italic;
+            color: #8b7355;
+        }
+    </style>
+</head>
+<body>
+    <div class="diary">
+        <div class="ornament">❦</div>
+
+        <header>
+            <h1>The Diary of</h1>
+            <h1>Nguyen Tram Anh</h1>
+            <p class="subtitle">~ Living in Grateful Contemplation ~</p>
+        </header>
+
+        <div class="ornament">❦</div>
+
+        <div id="posts-container">
+            <div class="loading">Loading entries...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const entry = document.createElement('div');
+                    entry.className = 'entry';
+
+                    let displayText = post.text;
+                    if (displayText.length > 500) {
+                        displayText = displayText.substring(0, 500) + '...';
+                    }
+
+                    let imagesHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imagesHTML = post.images.slice(0, 1).map(img =>
+                            `<img src="../${img}" alt="Photograph">`
+                        ).join('');
+                    }
+
+                    entry.innerHTML = `
+                        <div class="entry-header">
+                            <div class="entry-date">${post.date_formatted}</div>
+                        </div>
+                        <div class="entry-text dropcap">${displayText}</div>
+                        ${imagesHTML}
+                        <div class="entry-footer">
+                            ~ ${post.likes} hearts · ${post.comments} reflections ~
+                        </div>
+                    `;
+
+                    container.appendChild(entry);
+
+                    if (index < posts.length - 1) {
+                        const ornament = document.createElement('div');
+                        ornament.className = 'ornament';
+                        ornament.textContent = '❦';
+                        container.appendChild(ornament);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 5: 90s GeoCities Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23000080" width="100" height="100"/><circle fill="%23FF00FF" cx="10" cy="10" r="5"/><circle fill="%2300FFFF" cx="90" cy="90" r="5"/></svg>');
+            font-family: 'Comic Sans MS', cursive;
+            color: #ffff00;
+        }
+
+        marquee {
+            background: #ff00ff;
+            color: #00ffff;
+            padding: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #000080;
+            border: 5px ridge #ffff00;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff00ff;
+            font-size: 3em;
+            text-shadow: 2px 2px #00ffff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.5; }
+        }
+
+        .counter {
+            text-align: center;
+            margin: 20px 0;
+            color: #00ff00;
+        }
+
+        .post {
+            background: #ffffff;
+            color: #000000;
+            margin: 20px 0;
+            padding: 15px;
+            border: 3px dashed #ff00ff;
+        }
+
+        .post h2 {
+            color: #ff0000;
+            text-decoration: underline;
+        }
+
+        .post img {
+            width: 100%;
+            border: 5px outset #ffff00;
+            margin: 10px 0;
+        }
+
+        .guestbook {
+            background: #ffff00;
+            color: #000000;
+            padding: 15px;
+            margin: 20px 0;
+            border: 3px solid #ff00ff;
+            font-family: Arial;
+        }
+
+        .email {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .email a {
+            color: #00ffff;
+            font-size: 1.2em;
+            text-decoration: none;
+            background: #ff00ff;
+            padding: 10px 20px;
+            border: 2px outset #ffff00;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #ff00ff;
+            color: #ffff00;
+            border: 3px ridge #00ffff;
+        }
+
+        .webring {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .webring a {
+            background: #00ff00;
+            color: #000000;
+            padding: 5px 15px;
+            text-decoration: none;
+            border: 2px outset #ffff00;
+        }
+
+        img[alt="New!"] {
+            width: 50px !important;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #ffff00;
+        }
+    </style>
+</head>
+<body>
+    <marquee>🌟 WELCOME TO NGUYEN TRAM ANH'S HOMEPAGE! 🌟 UNDER CONSTRUCTION 🚧</marquee>
+
+    <div class="container">
+        <h1>✨ Nguyen Tram Anh ✨</h1>
+
+        <div class="counter">
+            👁️ You are visitor #123,456 👁️
+        </div>
+
+        <center>
+            <img src="https://via.placeholder.com/200x50/ff00ff/ffff00?text=EMAIL+ME!" alt="Email banner">
+        </center>
+
+        <div id="posts-container">
+            <div class="loading">LOADING POSTS... PLEASE WAIT!!!</div>
+        </div>
+
+        <div class="guestbook">
+            <h3>📝 SIGN MY GUESTBOOK! 📝</h3>
+            <p>Please leave a message! ^_^</p>
+        </div>
+
+        <div class="email">
+            <a href="mailto:tramanh@example.com">✉️ EMAIL ME! ✉️</a>
+        </div>
+
+        <div class="webring">
+            <a href="#">« PREV</a>
+            <a href="#">RANDOM</a>
+            <a href="#">NEXT »</a>
+        </div>
+
+        <div class="footer">
+            <p>⭐ Best viewed in Netscape Navigator 4.0+ at 800x600 ⭐</p>
+            <p>Last updated: TODAY!</p>
+            <p>© 2025 Nguyen Tram Anh. All Rights Reserved.</p>
+            <img src="https://via.placeholder.com/88x31/000000/00ff00?text=Made+With+HTML" alt="">
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach(post => {
+                    const div = document.createElement('div');
+                    div.className = 'post';
+
+                    let displayText = post.text;
+                    if (displayText.length > 250) {
+                        displayText = displayText.substring(0, 250) + '...';
+                    }
+
+                    // Extract title from first line
+                    const firstLine = post.text.split('\n')[0];
+                    const title = firstLine.length > 40 ? firstLine.substring(0, 40) + '!' : firstLine;
+
+                    // Add lots of emojis for 90s vibe
+                    const emojis = ['🎉', '🤣', '❤️', '✨', '🌟', '💖', '😊', '🎊'];
+                    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `<img src="../${post.images[0]}" alt="">`;
+                    }
+
+                    div.innerHTML = `
+                        <h2>${randomEmoji} ${title} ${randomEmoji}</h2>
+                        <p><b>Posted:</b> ${post.date_formatted}</p>
+                        ${imageHTML}
+                        <p>${displayText.replace(/\n/g, '<br>')}</p>
+                        <p><font color="red"><b>❤️ ${post.likes} likes • 💬 ${post.comments} comments</b></font></p>
+                    `;
+
+                    container.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('posts-container').innerHTML = 
+                    '<div class="loading">ERROR LOADING POSTS!!!</div>';
+            });
+    </script>
+</body>
+</html>

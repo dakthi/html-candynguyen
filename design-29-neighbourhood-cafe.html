@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 29: Neighbourhood Café</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            background: #f5f3f0;
+            color: #2c2416;
+        }
+
+        .cafe {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fefdfb;
+            min-height: 100vh;
+        }
+
+        .top-accent {
+            background: #1a4d7d;
+            height: 8px;
+        }
+
+        .top-accent-secondary {
+            background: #8dc8a8;
+            height: 4px;
+        }
+
+        header {
+            padding: 50px 40px;
+            background: #fff;
+            border-bottom: 4px solid #8dc8a8;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo-img {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            flex: 1;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            color: #1a4d7d;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .tagline {
+            font-size: 1.05em;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .menu-board {
+            background: #1a4d7d;
+            color: #f8f9fa;
+            padding: 25px;
+            margin: 0 40px 40px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .menu-board h2 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            color: #8dc8a8;
+        }
+
+        .content {
+            padding: 0 40px 60px;
+        }
+
+        .story-card {
+            background: white;
+            padding: 35px;
+            margin-bottom: 35px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(26, 77, 125, 0.08);
+            border-top: 4px solid #8dc8a8;
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            box-shadow: 0 4px 16px rgba(26, 77, 125, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f5;
+        }
+
+        .story-date {
+            font-size: 0.9em;
+            color: #1a4d7d;
+            font-weight: 600;
+        }
+
+        .story-tag {
+            background: #e8f4f0;
+            color: #1a4d7d;
+            padding: 5px 14px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .story-title {
+            font-size: 1.5em;
+            color: #1a4d7d;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .story-text {
+            line-height: 1.8;
+            font-size: 1.05em;
+            color: #495057;
+            margin-bottom: 25px;
+        }
+
+        .story-image {
+            margin: 25px 0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .story-image img {
+            width: 100%;
+            display: block;
+        }
+
+        .engagement {
+            display: flex;
+            gap: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #f1f3f5;
+            font-size: 0.95em;
+            color: #6c757d;
+        }
+
+        .engagement-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .heart {
+            color: #8dc8a8;
+            font-size: 1.2em;
+        }
+
+        .comment {
+            color: #1a4d7d;
+            font-size: 1.2em;
+        }
+
+        .engagement-item strong {
+            color: #1a4d7d;
+            font-weight: 700;
+        }
+
+        #stories-container .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8b7355;
+        }
+    </style>
+</head>
+<body>
+    <div class="cafe">
+        <div class="top-accent"></div>
+        <div class="top-accent-secondary"></div>
+
+        <header>
+            <img src="../logo.png" alt="Talking and Exploring" class="logo-img">
+            <div class="logo-text">
+                <h1>Talking and Exploring</h1>
+                <p class="tagline">Where neighbours share tales over tea</p>
+            </div>
+        </header>
+
+        <div class="menu-board">
+            <h2>TODAY'S STORIES</h2>
+            <p>Fresh from our community walks ☕</p>
+        </div>
+
+        <div class="content">
+            <div id="stories-container">
+                <div class="loading">Brewing stories...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tags = ['Local Walk', 'Community', 'Heritage', 'Memory', 'Discovery', 'Neighbourhood'];
+
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('stories-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'story-card';
+
+                    let displayText = post.text;
+                    if (displayText.length > 400) {
+                        displayText = displayText.substring(0, 400) + '...';
+                    }
+
+                    // Extract title
+                    const firstSentence = displayText.split(/[.!?]/)[0];
+                    const title = firstSentence.length > 65
+                        ? firstSentence.substring(0, 65) + '...'
+                        : firstSentence;
+
+                    const tag = tags[index % tags.length];
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `
+                            <div class="story-image">
+                                <img src="../${post.images[0]}" alt="">
+                            </div>
+                        `;
+                    }
+
+                    card.innerHTML = `
+                        <div class="story-meta">
+                            <span class="story-date">${post.date_formatted}</span>
+                            <span class="story-tag">${tag}</span>
+                        </div>
+                        <h3 class="story-title">${title}</h3>
+                        <div class="story-text">${displayText}</div>
+                        ${imageHTML}
+                        <div class="engagement">
+                            <div class="engagement-item">
+                                <span class="heart">♥</span>
+                                <span><strong>${post.likes}</strong> enjoyed this</span>
+                            </div>
+                            <div class="engagement-item">
+                                <span class="comment">💬</span>
+                                <span><strong>${post.comments}</strong> conversations</span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

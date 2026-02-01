@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design 9: Polaroid Scrapbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Permanent Marker', cursive, sans-serif;
+            background: #f4e4d7 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23e8d5c4" width="200" height="200"/><line x1="0" y1="0" x2="200" y2="200" stroke="%23d4c4b0" stroke-width="1" opacity="0.3"/><line x1="200" y1="0" x2="0" y2="200" stroke="%23d4c4b0" stroke-width="1" opacity="0.3"/></svg>');
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #8b4513;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            display: inline-block;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #a0522d;
+            margin-top: 20px;
+        }
+
+        .polaroids {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 20px 20px 60px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .polaroid:nth-child(odd) {
+            transform: rotate(-3deg);
+        }
+
+        .polaroid:nth-child(even) {
+            transform: rotate(3deg);
+        }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            filter: sepia(10%) contrast(105%) brightness(102%);
+        }
+
+        .polaroid-caption {
+            font-family: 'Caveat', cursive, sans-serif;
+            font-size: 1.2em;
+            color: #4a4a4a;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .polaroid-meta {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            right: 20px;
+            font-size: 0.8em;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+            font-family: Arial, sans-serif;
+        }
+
+        .tape {
+            position: absolute;
+            width: 60px;
+            height: 25px;
+            background: rgba(255, 248, 220, 0.7);
+            border: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .tape-top-left {
+            top: -5px;
+            left: 10px;
+            transform: rotate(-15deg);
+        }
+
+        .tape-top-right {
+            top: -5px;
+            right: 10px;
+            transform: rotate(15deg);
+        }
+
+        .pushpin {
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            border-radius: 50% 50% 50% 0;
+            position: absolute;
+            top: -10px;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .pushpin-1 { left: 50px; }
+        .pushpin-2 { right: 50px; }
+        .pushpin-3 { left: 150px; }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8b4513;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Memory Wall</h1>
+            <p>Những khoảnh khắc đáng nhớ ♥</p>
+        </div>
+
+        <div class="polaroids" id="posts-container">
+            <div class="loading">Loading memories...</div>
+        </div>
+    </div>
+
+    <script>
+        fetch('../curated_posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const container = document.getElementById('posts-container');
+                container.innerHTML = '';
+
+                posts.forEach((post, index) => {
+                    // Only show posts with images
+                    if (post.images && post.images.length > 0) {
+                        const polaroid = document.createElement('div');
+                        polaroid.className = 'polaroid';
+
+                        // Alternate between tape and pushpin decorations
+                        const decorations = [
+                            '<div class="tape tape-top-left"></div><div class="tape tape-top-right"></div>',
+                            '<div class="pushpin pushpin-1"></div>',
+                            '<div class="tape tape-top-left"></div>',
+                            '<div class="pushpin pushpin-2"></div>',
+                            '<div class="tape tape-top-right"></div>',
+                            '<div class="pushpin pushpin-3"></div>'
+                        ];
+                        const decoration = decorations[index % decorations.length];
+
+                        // Create caption from first line
+                        const firstLine = post.text.split('\n')[0];
+                        let caption = firstLine.length > 60 ? firstLine.substring(0, 60) + '...' : firstLine;
+                        
+                        // Add emoji if not already present
+                        if (!/[\u{1F300}-\u{1F9FF}]/u.test(caption)) {
+                            const emojis = ['😊', '❤️', '✨', '🌟', '💖', '🎉'];
+                            caption += ' ' + emojis[index % emojis.length];
+                        }
+
+                        // Format date
+                        const date = new Date(post.date);
+                        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
+                        polaroid.innerHTML = `
+                            ${decoration}
+                            <img src="../${post.images[0]}" alt="">
+                            <div class="polaroid-caption">${caption}</div>
+                            <div class="polaroid-meta">
+                                <span>${formattedDate}</span>
+                                <span>❤️ ${post.likes}</span>
+                            </div>
+                        `;
+
+                        container.appendChild(polaroid);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('posts-container').innerHTML = 
+                    '<div class="loading">Error loading memories</div>';
+            });
+    </script>
+</body>
+</html>

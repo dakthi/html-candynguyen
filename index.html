@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20 Blog Design Styles - Nguyen Tram Anh</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .stats span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .design-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .design-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .design-preview {
+            width: 100%;
+            height: 250px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .design-info {
+            padding: 20px;
+        }
+
+        .design-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .design-description {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .design-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        .view-button {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 24px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+
+        .view-button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>20 Blog Design Styles</h1>
+            <p>Nguyen Tram Anh - Sống trong tâm tình biết ơn</p>
+            <div class="stats">
+                <div><span>150</span> posts</div>
+                <div><span>10</span> curated posts</div>
+                <div><span>20</span> design styles</div>
+            </div>
+        </header>
+
+        <div class="designs-grid">
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);">📄</div>
+                <div class="design-info">
+                    <div class="design-title">1. Minimal Cards</div>
+                    <div class="design-description">Clean, modern card-based layout with hover effects</div>
+                    <div class="design-tags">
+                        <span class="tag">Modern</span>
+                        <span class="tag">Minimal</span>
+                        <span class="tag">Clean</span>
+                    </div>
+                    <a href="design-1-minimal.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);">🧱</div>
+                <div class="design-info">
+                    <div class="design-title">2. Pinterest Masonry</div>
+                    <div class="design-description">Dynamic column layout that adapts to content height</div>
+                    <div class="design-tags">
+                        <span class="tag">Pinterest-style</span>
+                        <span class="tag">Responsive</span>
+                    </div>
+                    <a href="design-2-masonry.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #f4f1e8 0%, #e8e0d0 100%);">📰</div>
+                <div class="design-info">
+                    <div class="design-title">3. Vintage Newspaper (1920s)</div>
+                    <div class="design-description">Classic newspaper layout with columns and serif fonts</div>
+                    <div class="design-tags">
+                        <span class="tag">Vintage</span>
+                        <span class="tag">1920s</span>
+                        <span class="tag">Classic</span>
+                    </div>
+                    <a href="design-3-newspaper.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">✨</div>
+                <div class="design-info">
+                    <div class="design-title">4. Art Deco (1930s)</div>
+                    <div class="design-description">Glamorous gold and dark blue with geometric shapes</div>
+                    <div class="design-tags">
+                        <span class="tag">Art Deco</span>
+                        <span class="tag">1930s</span>
+                        <span class="tag">Elegant</span>
+                    </div>
+                    <a href="design-4-artdeco.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #000080 0%, #0000cd 100%);">🌟</div>
+                <div class="design-info">
+                    <div class="design-title">5. 90s GeoCities Web</div>
+                    <div class="design-description">Nostalgic bright colors, marquees, and guestbooks</div>
+                    <div class="design-tags">
+                        <span class="tag">90s</span>
+                        <span class="tag">Retro</span>
+                        <span class="tag">Fun</span>
+                    </div>
+                    <a href="design-5-90sweb.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);">📝</div>
+                <div class="design-info">
+                    <div class="design-title">6. Early 2000s Blog</div>
+                    <div class="design-description">Blogger/LiveJournal style with sidebar and moods</div>
+                    <div class="design-tags">
+                        <span class="tag">2000s</span>
+                        <span class="tag">Blog</span>
+                        <span class="tag">Nostalgic</span>
+                    </div>
+                    <a href="design-6-early2000s.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);">📸</div>
+                <div class="design-info">
+                    <div class="design-title">7. Instagram Grid</div>
+                    <div class="design-description">Social media inspired grid with profile header</div>
+                    <div class="design-tags">
+                        <span class="tag">Instagram</span>
+                        <span class="tag">Grid</span>
+                        <span class="tag">Modern</span>
+                    </div>
+                    <a href="design-7-instagram.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);">⚡</div>
+                <div class="design-info">
+                    <div class="design-title">8. Brutalist</div>
+                    <div class="design-description">Raw, high-contrast black and lime green terminal style</div>
+                    <div class="design-tags">
+                        <span class="tag">Brutalist</span>
+                        <span class="tag">Bold</span>
+                        <span class="tag">Tech</span>
+                    </div>
+                    <a href="design-8-brutalist.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #f4e4d7 0%, #e8d5c4 100%);">📷</div>
+                <div class="design-info">
+                    <div class="design-title">9. Polaroid Scrapbook</div>
+                    <div class="design-description">Photos with handwritten captions and tape/pushpins</div>
+                    <div class="design-tags">
+                        <span class="tag">Scrapbook</span>
+                        <span class="tag">Photos</span>
+                        <span class="tag">Handmade</span>
+                    </div>
+                    <a href="design-9-polaroid.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📰</div>
+                <div class="design-info">
+                    <div class="design-title">10. Magazine Editorial</div>
+                    <div class="design-description">High-fashion editorial with full-bleed images</div>
+                    <div class="design-tags">
+                        <span class="tag">Magazine</span>
+                        <span class="tag">Editorial</span>
+                        <span class="tag">Elegant</span>
+                    </div>
+                    <a href="design-10-magazine.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #8b7355 0%, #a08968 100%);">☕</div>
+                <div class="design-info">
+                    <div class="design-title">11. Vietnamese Café Journal</div>
+                    <div class="design-description">Warm coffee tones with handwritten touches</div>
+                    <div class="design-tags">
+                        <span class="tag">Cozy</span>
+                        <span class="tag">Warm</span>
+                        <span class="tag">Journal</span>
+                    </div>
+                    <a href="design-11-cafe-journal.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #f5f1e8 0%, #fef9f3 100%);">🙏</div>
+                <div class="design-info">
+                    <div class="design-title">12. Gratitude Journal</div>
+                    <div class="design-description">Peaceful aesthetic focused on thankfulness</div>
+                    <div class="design-tags">
+                        <span class="tag">Gratitude</span>
+                        <span class="tag">Peaceful</span>
+                        <span class="tag">Soft</span>
+                    </div>
+                    <a href="design-12-gratitude-journal.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #e8dcc8 0%, #d0c4b0 100%);">⌨️</div>
+                <div class="design-info">
+                    <div class="design-title">13. Typewriter Memoir</div>
+                    <div class="design-description">Monospace font with vintage paper texture</div>
+                    <div class="design-tags">
+                        <span class="tag">Typewriter</span>
+                        <span class="tag">Memoir</span>
+                        <span class="tag">Classic</span>
+                    </div>
+                    <a href="design-13-typewriter.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #fafaf8 0%, #f5f5f3 100%);">🎌</div>
+                <div class="design-info">
+                    <div class="design-title">14. Japanese Minimal</div>
+                    <div class="design-description">Zen-inspired with lots of white space</div>
+                    <div class="design-tags">
+                        <span class="tag">Japanese</span>
+                        <span class="tag">Minimal</span>
+                        <span class="tag">Zen</span>
+                    </div>
+                    <a href="design-14-japanese-minimal.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #2d1b0e 0%, #5a4a3a 100%);">📖</div>
+                <div class="design-info">
+                    <div class="design-title">15. Victorian Diary</div>
+                    <div class="design-description">Ornate borders and old-world elegance</div>
+                    <div class="design-tags">
+                        <span class="tag">Victorian</span>
+                        <span class="tag">Ornate</span>
+                        <span class="tag">Historic</span>
+                    </div>
+                    <a href="design-15-victorian.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #ffd1dc 0%, #e6f3ff 100%);">🎨</div>
+                <div class="design-info">
+                    <div class="design-title">16. Watercolor Scrapbook</div>
+                    <div class="design-description">Soft pastels with artistic watercolor effects</div>
+                    <div class="design-tags">
+                        <span class="tag">Watercolor</span>
+                        <span class="tag">Artistic</span>
+                        <span class="tag">Colorful</span>
+                    </div>
+                    <a href="design-16-watercolor.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);">📱</div>
+                <div class="design-info">
+                    <div class="design-title">17. Clean Modern</div>
+                    <div class="design-description">Contemporary minimalist with perfect spacing</div>
+                    <div class="design-tags">
+                        <span class="tag">Modern</span>
+                        <span class="tag">Clean</span>
+                        <span class="tag">Simple</span>
+                    </div>
+                    <a href="design-17-clean-modern.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #f8f6f1 0%, #e8d5c4 100%);">🌾</div>
+                <div class="design-info">
+                    <div class="design-title">18. Warm Earthy Minimal</div>
+                    <div class="design-description">Natural tones with calming earth colors</div>
+                    <div class="design-tags">
+                        <span class="tag">Earthy</span>
+                        <span class="tag">Warm</span>
+                        <span class="tag">Natural</span>
+                    </div>
+                    <a href="design-18-warm-earthy.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #d4b896 0%, #c4a57b 100%);">✉️</div>
+                <div class="design-info">
+                    <div class="design-title">19. Vintage Postcard</div>
+                    <div class="design-description">Travel postcards with stamps and postmarks</div>
+                    <div class="design-tags">
+                        <span class="tag">Postcard</span>
+                        <span class="tag">Travel</span>
+                        <span class="tag">Vintage</span>
+                    </div>
+                    <a href="design-19-vintage-postcard.html" class="view-button">View Design</a>
+                </div>
+            </div>
+
+            <div class="design-card">
+                <div class="design-preview" style="background: linear-gradient(135deg, #e8e4dc 0%, #fff 100%);">📔</div>
+                <div class="design-info">
+                    <div class="design-title">20. Handwritten Notebook</div>
+                    <div class="design-description">Lined paper with handwritten font and doodles</div>
+                    <div class="design-tags">
+                        <span class="tag">Handwritten</span>
+                        <span class="tag">Notebook</span>
+                        <span class="tag">Personal</span>
+                    </div>
+                    <a href="design-20-handwritten-notebook.html" class="view-button">View Design</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
