@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin CMS - Nguyễn Trâm Anh</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Verdana, Arial, sans-serif;
+            background: #e9ecef url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect fill="%23dde3e9" width="20" height="20"/><circle fill="%23c8d2db" cx="10" cy="10" r="1" opacity="0.5"/></svg>');
+            color: #333;
+            font-size: 12px;
+        }
+
+        .blog {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            border: 1px solid #999;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, #6699cc 0%, #4477aa 100%);
+            color: white;
+            padding: 20px;
+            border-bottom: 3px solid #336699;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: normal;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-actions span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .header-actions a, .header-actions button {
+            color: white;
+            text-decoration: none;
+            font-size: 11px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+        }
+
+        .header-actions a:hover, .header-actions button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #336699;
+            border-top: 3px solid #336699;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .posts-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .post-item {
+            background: white;
+            padding: 15px;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-info h3 {
+            font-size: 14px;
+            color: #336699;
+            margin-bottom: 5px;
+        }
+
+        .post-info p {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 11px;
+            border: 1px solid #336699;
+            background: white;
+            color: #336699;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #336699;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #336699;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4477aa;
+        }
+
+        .btn-danger {
+            border-color: #c44;
+            color: #c44;
+        }
+
+        .btn-danger:hover {
+            background: #c44;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #336699;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            color: #336699;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .status-message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .blog {
+                margin: 0;
+                border: none;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .post-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blog">
+        <div class="header">
+            <h1>Admin CMS</h1>
+            <div class="header-actions">
+                <span id="save-status"></span>
+                <a href="index.html">Xem trang</a>
+                <button onclick="logout()">Đăng xuất</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="status-container"></div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('posts')">Bài viết</button>
+                <button class="tab-btn" onclick="showTab('new-post')">Thêm bài mới</button>
+            </div>
+
+            <!-- Posts List Tab -->
+            <div id="tab-posts" class="tab-content active">
+                <h2 style="margin-bottom: 20px; color: #336699;">Danh sách bài viết (148)</h2>
+                <div class="posts-list" id="posts-list">
+                    <p>Đang tải...</p>
+                </div>
+            </div>
+
+            <!-- New Post Tab -->
+            <div id="tab-new-post" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: #336699;">Thêm bài viết mới</h2>
+                <form id="new-post-form">
+                    <div class="form-group">
+                        <label>Tiêu đề (dòng đầu tiên)</label>
+                        <input type="text" id="new-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nội dung bài viết</label>
+                        <textarea id="new-text" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Mood</label>
+                        <select id="new-mood">
+                            <option value="">Không có mood</option>
+                            <option value="❤️ cảm thấy biết ơn">❤️ cảm thấy biết ơn</option>
+                            <option value="😊 cảm thấy vui vẻ">😊 cảm thấy vui vẻ</option>
+                            <option value="🤣 cảm thấy buồn cười">🤣 cảm thấy buồn cười</option>
+                            <option value="💕 cảm thấy yêu thương">💕 cảm thấy yêu thương</option>
+                            <option value="📝 cảm thấy muốn chia sẻ">📝 cảm thấy muốn chia sẻ</option>
+                            <option value="😌 cảm thấy bình yên">😌 cảm thấy bình yên</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Tạo bài viết</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chỉnh sửa bài viết</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="edit-form">
+                <input type="hidden" id="edit-post-id">
+                <div class="form-group">
+                    <label>Tiêu đề (dòng đầu tiên)</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Nội dung đầy đủ</label>
+                    <textarea id="edit-text" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Mood</label>
+                    <select id="edit-mood">
+                        <option value="">Không có mood</option>
+                        <option value="❤️ cảm thấy biết ơn">❤️ cảm thấy biết ơn</option>
+                        <option value="😊 cảm thấy vui vẻ">😊 cảm thấy vui vẻ</option>
+                        <option value="🤣 cảm thấy buồn cười">🤣 cảm thấy buồn cười</option>
+                        <option value="💕 cảm thấy yêu thương">💕 cảm thấy yêu thương</option>
+                        <option value="📝 cảm thấy muốn chia sẻ">📝 cảm thấy muốn chia sẻ</option>
+                        <option value="😌 cảm thấy bình yên">😌 cảm thấy bình yên</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ngày đăng</label>
+                    <input type="datetime-local" id="edit-time" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const REPO = 'dakthi/html-candynguyen';
+        const CONTENT_PATH = 'posts_with_images.json';
+
+        let posts = {};
+        let contentSha = '';
+
+        // Check auth
+        const token = localStorage.getItem('github_token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        function showStatus(message, type) {
+            const container = document.getElementById('status-container');
+            container.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        async function loadPosts() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${CONTENT_PATH}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.content) {
+                    contentSha = data.sha;
+                    const content = decodeURIComponent(escape(atob(data.content)));
+                    posts = JSON.parse(content);
+                    renderPosts();
+                } else {
+                    showStatus('Lỗi: ' + (data.message || 'Không thể tải bài viết'), 'error');
+                }
+            } catch (e) {
+                showStatus('Lỗi: ' + e.message, 'error');
+            }
+        }
+
+        function renderPosts() {
+            const list = document.getElementById('posts-list');
+            const postsArray = Object.entries(posts).sort((a, b) => {
+                return new Date(b[1].time) - new Date(a[1].time);
+            });
+
+            list.innerHTML = postsArray.map(([id, post]) => {
+                const date = new Date(post.time).toLocaleString('vi-VN');
+                const title = post.text.split('\n')[0].substring(0, 80);
+                return `
+                    <div class="post-item">
+                        <div class="post-info">
+                            <h3>${title}...</h3>
+                            <p>${date} | ${post.mood || 'Không có mood'}</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn" onclick="editPost('${id}')">Sửa</button>
+                            <button class="btn btn-danger" onclick="deletePost('${id}')">Xóa</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editPost(postId) {
+            const post = posts[postId];
+            document.getElementById('edit-post-id').value = postId;
+            document.getElementById('edit-title').value = post.text.split('\n')[0];
+            document.getElementById('edit-text').value = post.text;
+            document.getElementById('edit-mood').value = post.mood || '';
+            document.getElementById('edit-time').value = new Date(post.time).toISOString().slice(0, 16);
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+        }
+
+        async function deletePost(postId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa bài viết này?')) return;
+
+            delete posts[postId];
+            await savePosts('Xóa bài viết');
+        }
+
+        async function savePosts(message = 'Cập nhật bài viết') {
+            try {
+                showStatus('Đang lưu...', 'info');
+                const jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
+
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${CONTENT_PATH}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message + ' (qua CMS)',
+                        content: jsonContent,
+                        sha: contentSha
+                    })
+                });
+
+                const data = await res.json();
+                if (data.content) {
+                    contentSha = data.content.sha;
+                    showStatus('Đã lưu! Trang sẽ tự động cập nhật trong vài giây.', 'success');
+                    renderPosts();
+                    document.getElementById('save-status').textContent = 'Lưu lúc: ' + new Date().toLocaleTimeString();
+                } else {
+                    showStatus('Lỗi: ' + (data.message || 'Không thể lưu'), 'error');
+                }
+            } catch (e) {
+                showStatus('Lỗi: ' + e.message, 'error');
+            }
+        }
+
+        // Edit form submit
+        document.getElementById('edit-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const postId = document.getElementById('edit-post-id').value;
+            const text = document.getElementById('edit-text').value;
+            const mood = document.getElementById('edit-mood').value;
+            const time = new Date(document.getElementById('edit-time').value).toISOString();
+
+            posts[postId].text = text;
+            posts[postId].mood = mood || null;
+            posts[postId].time = time;
+
+            await savePosts('Chỉnh sửa bài viết');
+            closeEditModal();
+        });
+
+        // New post form submit
+        document.getElementById('new-post-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-title').value;
+            const text = document.getElementById('new-text').value;
+            const mood = document.getElementById('new-mood').value;
+
+            const newId = Date.now().toString();
+            const fullText = title + '\n' + text;
+
+            posts[newId] = {
+                text: fullText,
+                time: new Date().toISOString(),
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                images: [],
+                mood: mood || null
+            };
+
+            await savePosts('Thêm bài viết mới');
+            this.reset();
+            showTab('posts');
+        });
+
+        function logout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                localStorage.removeItem('github_token');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Load posts on page load
+        loadPosts();
+    </script>
+</body>
+</html>
