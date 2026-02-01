@@ -476,6 +476,9 @@
                 <p style="margin-bottom: 10px; font-size: 10px;">
                     <button class="btn btn-primary" onclick="showNewPostForm()">+ Thêm bài mới</button>
                 </p>
+                <p style="margin-bottom: 15px;">
+                    <input type="text" id="adminSearchBox" placeholder="Tìm kiếm bài viết..." style="width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; font-size: 11px; font-family: Verdana, Arial, sans-serif;">
+                </p>
                 <div class="table-wrapper">
                     <table class="posts-table" id="posts-table">
                         <thead>
@@ -648,12 +651,22 @@
 
         function renderPosts() {
             const list = document.getElementById('posts-list');
-            const postsArray = Object.entries(posts).sort((a, b) => {
+            const searchTerm = document.getElementById('adminSearchBox').value.toLowerCase();
+
+            let postsArray = Object.entries(posts).sort((a, b) => {
                 return new Date(b[1].time) - new Date(a[1].time);
             });
 
+            // Filter by search term if present
+            if (searchTerm) {
+                postsArray = postsArray.filter(([id, post]) => {
+                    const fullText = ((post.title || '') + ' ' + (post.body || '')).toLowerCase();
+                    return fullText.includes(searchTerm);
+                });
+            }
+
             if (postsArray.length === 0) {
-                list.innerHTML = '<tr><td colspan="4" align="center">Chưa có bài viết nào</td></tr>';
+                list.innerHTML = '<tr><td colspan="4" align="center">Không tìm thấy bài viết nào</td></tr>';
                 return;
             }
 
@@ -805,6 +818,11 @@
 
         hamburger.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
+
+        // Search functionality - real-time filtering
+        document.getElementById('adminSearchBox').addEventListener('input', function() {
+            renderPosts();
+        });
 
         // Load posts on page load
         loadPosts();

@@ -484,11 +484,16 @@
                 <h3>Giới thiệu</h3>
                 <p>Digital Creator<br>Di Linh, Lâm Đồng<br>Việt Nam</p>
 
+                <h3>Tìm kiếm</h3>
+                <input type="text" id="searchBox" placeholder="Tìm bài viết..." style="width: 100%; padding: 8px; border: 1px solid #ccc; font-size: 11px; font-family: Verdana, Arial, sans-serif; margin-bottom: 10px;">
+                <button onclick="searchPosts(); return false;" style="width: 100%; padding: 8px; background: #336699; color: white; border: none; cursor: pointer; font-size: 11px;">Tìm</button>
+
                 <h3>Liên kết</h3>
                 <ul>
                     <li><a href="https://www.facebook.com/candy.nguyen.5832" target="_blank">Facebook</a></li>
                     <li><a href="contact.html">Nhắn tin cho tôi</a></li>
                     <li><a href="#" onclick="showAllPosts(); closeSidebar(); return false;">Tất cả bài viết</a></li>
+                    <li><a href="gallery.html">Thư viện ảnh</a></li>
                 </ul>
 
                 <h3>Cỡ chữ</h3>
@@ -713,6 +718,31 @@
                 return keywordList.some(keyword => fullText.includes(keyword));
             });
         }
+
+        function searchPosts() {
+            const searchTerm = document.getElementById('searchBox').value.trim().toLowerCase();
+            if (!searchTerm) {
+                showAllPosts();
+                return;
+            }
+            filterPosts(post => {
+                const fullText = ((post.title || '') + ' ' + (post.body || '')).toLowerCase();
+                return fullText.includes(searchTerm);
+            });
+            closeSidebar();
+        }
+
+        // Allow Enter key to trigger search
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                searchBox.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        searchPosts();
+                    }
+                });
+            }
+        });
 
         // Load posts
         fetch('posts_with_images.json')
