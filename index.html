@@ -66,6 +66,10 @@
             overflow-y: auto;
         }
 
+        body.sidebar-open {
+            overflow: hidden;
+        }
+
         .sidebar h3 {
             font-size: 12px;
             color: #336699;
@@ -258,6 +262,7 @@
                 z-index: 999;
                 transition: right 0.3s ease;
                 box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+                padding-bottom: 100px;
             }
 
             .sidebar.active {
@@ -348,75 +353,6 @@
             border-color: #ccc;
             color: #ccc;
             cursor: not-allowed;
-        }
-
-        .contact-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid #336699;
-            padding: 20px;
-            z-index: 1001;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .contact-modal.active {
-            display: block;
-        }
-
-        .contact-modal h2 {
-            font-size: 18px;
-            color: #336699;
-            margin-bottom: 15px;
-        }
-
-        .contact-modal label {
-            display: block;
-            font-size: 11px;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .contact-modal input,
-        .contact-modal textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            font-family: Verdana, Arial, sans-serif;
-            font-size: 12px;
-        }
-
-        .contact-modal textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .contact-modal button {
-            background: #336699;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .contact-modal button:hover {
-            background: #4477aa;
-        }
-
-        .contact-modal .cancel {
-            background: #999;
-        }
-
-        .contact-modal .cancel:hover {
-            background: #777;
         }
 
         .lightbox {
@@ -525,23 +461,6 @@
         <img id="lightboxImage" src="" alt="">
     </div>
 
-    <div class="contact-modal" id="contactModal">
-        <h2>Write to me</h2>
-        <form id="contactForm">
-            <label for="name">Your Name *</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="email">Your Email *</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="message">Message *</label>
-            <textarea id="message" name="message" required></textarea>
-
-            <button type="submit">Send Message</button>
-            <button type="button" class="cancel" onclick="closeContactForm()">Cancel</button>
-        </form>
-    </div>
-
     <div class="blog">
         <div class="header">
             <button class="hamburger" id="hamburger">
@@ -568,7 +487,7 @@
                 <h3>Liên kết</h3>
                 <ul>
                     <li><a href="https://www.facebook.com/candy.nguyen.5832" target="_blank">Facebook</a></li>
-                    <li><a href="#" onclick="openContactForm(); return false;">Nhắn tin cho tôi</a></li>
+                    <li><a href="contact.html">Nhắn tin cho tôi</a></li>
                     <li><a href="#" onclick="showAllPosts(); closeSidebar(); return false;">Tất cả bài viết</a></li>
                 </ul>
 
@@ -795,51 +714,17 @@
         function toggleMenu() {
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
+            document.body.classList.toggle('sidebar-open');
         }
 
         function closeSidebar() {
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
+            document.body.classList.remove('sidebar-open');
         }
 
         hamburger.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
-
-        // Contact form functions
-        function openContactForm() {
-            document.getElementById('contactModal').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-
-        function closeContactForm() {
-            document.getElementById('contactModal').classList.remove('active');
-            if (!sidebar.classList.contains('active')) {
-                document.getElementById('overlay').classList.remove('active');
-            }
-        }
-
-        // Handle contact form submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-
-            // For now, just show an alert. You can replace this with actual form submission
-            alert(`Thank you ${name}! Your message has been sent.\n\nThis is a demo - in production, this would send your message to Trâm Anh.`);
-
-            // Reset form and close modal
-            this.reset();
-            closeContactForm();
-        });
-
-        // Close contact form when clicking overlay
-        overlay.addEventListener('click', function() {
-            closeContactForm();
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
 
         // Lightbox functions
         function openLightbox(imageSrc) {
@@ -864,7 +749,6 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeLightbox();
-                closeContactForm();
             }
         });
 
