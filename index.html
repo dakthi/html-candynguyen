@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Trâm Anh - Sống trong tâm tình biết ơn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Verdana, Arial, sans-serif;
+            background: #e9ecef url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect fill="%23dde3e9" width="20" height="20"/><circle fill="%23c8d2db" cx="10" cy="10" r="1" opacity="0.5"/></svg>');
+            color: #333;
+            font-size: 12px;
+        }
+
+        .blog {
+            max-width: 760px;
+            margin: 20px auto;
+            background: white;
+            border: 1px solid #999;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, #6699cc 0%, #4477aa 100%);
+            color: white;
+            padding: 20px;
+            border-bottom: 3px solid #336699;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-x: hidden;
+            min-width: 0;
+        }
+
+        .sidebar {
+            width: 180px;
+            background: #f5f5f5;
+            border-left: 1px solid #ddd;
+            padding: 15px;
+            font-size: 11px;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 12px;
+            color: #336699;
+            margin: 0 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .sidebar h3:not(:first-child) {
+            margin-top: 25px;
+        }
+
+        .sidebar p {
+            margin: 0 0 25px 0;
+            line-height: 1.6;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            margin: 0 0 20px 0;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .sidebar a {
+            color: #336699;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        .entry {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dotted #ccc;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        .entry-title {
+            font-size: 16px;
+            color: #336699;
+            font-weight: bold;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        .entry-date {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .entry-text {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .entry img {
+            max-width: 100%;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            padding: 2px;
+            background: white;
+            display: block;
+        }
+
+        .entry-images {
+            margin-top: 15px;
+        }
+
+        .entry-meta {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .entry-meta a {
+            color: #336699;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .entry-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .mood {
+            display: inline-block;
+            background: #ffffcc;
+            padding: 2px 6px;
+            border: 1px solid #ffcc00;
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: #336699;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .blog {
+                margin: 0;
+                border: none;
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .header p {
+                font-size: 10px;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                right: -200px;
+                width: 200px;
+                height: 100vh;
+                overflow-y: auto;
+                z-index: 999;
+                transition: right 0.3s ease;
+                box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+            }
+
+            .sidebar.active {
+                right: 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .entry-title {
+                font-size: 14px;
+            }
+
+            .entry-text {
+                font-size: 12px;
+            }
+
+            .entry img {
+                width: 100%;
+                height: auto;
+            }
+
+            .mood {
+                font-size: 9px;
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .pagination {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 3px;
+            border: 1px solid #336699;
+            background: white;
+            color: #336699;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .pagination a:hover {
+            background: #336699;
+            color: white;
+        }
+
+        .pagination .current {
+            background: #336699;
+            color: white;
+            font-weight: bold;
+        }
+
+        .pagination .disabled {
+            border-color: #ccc;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .contact-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid #336699;
+            padding: 20px;
+            z-index: 1001;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .contact-modal.active {
+            display: block;
+        }
+
+        .contact-modal h2 {
+            font-size: 18px;
+            color: #336699;
+            margin-bottom: 15px;
+        }
+
+        .contact-modal label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .contact-modal input,
+        .contact-modal textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .contact-modal textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .contact-modal button {
+            background: #336699;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .contact-modal button:hover {
+            background: #4477aa;
+        }
+
+        .contact-modal .cancel {
+            background: #999;
+        }
+
+        .contact-modal .cancel:hover {
+            background: #777;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border: 3px solid white;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        .lightbox-close:hover {
+            color: #ccc;
+        }
+
+        .entry img {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img id="lightboxImage" src="" alt="">
+    </div>
+
+    <div class="contact-modal" id="contactModal">
+        <h2>Write to me</h2>
+        <form id="contactForm">
+            <label for="name">Your Name *</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email *</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message *</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send Message</button>
+            <button type="button" class="cancel" onclick="closeContactForm()">Cancel</button>
+        </form>
+    </div>
+
+    <div class="blog">
+        <div class="header">
+            <h1>nguyen_tramanh</h1>
+            <p>Sống trong tâm tình biết ơn</p>
+        </div>
+
+        <div class="container">
+            <div class="content">
+                <div id="posts-container">
+                    <div class="loading">Loading entries...</div>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+
+            <div class="sidebar" id="sidebar">
+                <h3>About Me</h3>
+                <p>Digital Creator<br>Di Linh, Lam Dong<br>Vietnam</p>
+
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="https://www.facebook.com/candy.nguyen.5832" target="_blank">Facebook</a></li>
+                    <li><a href="#" onclick="openContactForm(); return false;">Write to me</a></li>
+                    <li><a href="#" onclick="showAllPosts(); return false;">All Posts</a></li>
+                </ul>
+
+                <h3>Archives</h3>
+                <ul>
+                    <li><a href="#" onclick="filterByMonth('2025-09'); return false;">September 2025</a></li>
+                    <li><a href="#" onclick="filterByMonth('2025-08'); return false;">August 2025</a></li>
+                    <li><a href="#" onclick="filterByMonth('2025-07'); return false;">July 2025</a></li>
+                    <li><a href="#" onclick="filterByMonth('2025-06'); return false;">June 2025</a></li>
+                    <li><a href="#" onclick="filterByMonth('2025-03'); return false;">March 2025</a></li>
+                    <li><a href="#" onclick="filterByMonth('2025-02'); return false;">February 2025</a></li>
+                    <li><a href="#" onclick="filterByMonth('2024'); return false;">2024</a></li>
+                </ul>
+
+                <h3>Topics</h3>
+                <ul>
+                    <li><a href="#" onclick="filterByTopic('sam|con|bé|gia đình|mẹ|ba'); return false;">Gia đình & Con cái</a></li>
+                    <li><a href="#" onclick="filterByTopic('giáo dục|học trò|dạy|tiểu học'); return false;">Giáo dục trẻ</a></li>
+                    <li><a href="#" onclick="filterByTopic('di linh|quê|sài gòn'); return false;">Cuộc sống Di Linh</a></li>
+                    <li><a href="#" onclick="filterByTopic('ví da|handmade|thủ công|hoa'); return false;">Handmade & Thủ công</a></li>
+                    <li><a href="#" onclick="filterByTopic('bếp|nấu|món'); return false;">Bếp núc</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            Powered by Blogger · Template by nguyen_tramanh
+        </div>
+    </div>
+
+    <script>
+        let allPosts = [];
+        let currentPage = 1;
+        const postsPerPage = 10;
+
+        function renderPosts(page) {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
+
+            const startIndex = (page - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const pagePosts = allPosts.slice(startIndex, endIndex);
+
+            pagePosts.forEach(post => {
+                    const entry = document.createElement('div');
+                    entry.className = 'entry';
+
+                    // Format date in blog style
+                    const date = new Date(post.time);
+                    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                                  'July', 'August', 'September', 'October', 'November', 'December'];
+                    const hours = date.getHours();
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const hour12 = hours % 12 || 12;
+                    const formattedDate = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} - ${hour12}:${minutes} ${ampm}`;
+
+                    // Extract title - show full first line
+                    const title = post.text.split('\n')[0];
+
+                    // Get text without the first line (since it's used as title)
+                    const textLines = post.text.split('\n');
+                    let displayText = textLines.slice(1).join('\n').trim();
+
+                    // Get mood from post data (only if it exists)
+                    let moodHTML = '';
+                    if (post.mood) {
+                        moodHTML = `<div class="mood">Current mood: ${post.mood}</div>`;
+                    }
+
+                    let imageHTML = '';
+                    if (post.images && post.images.length > 0) {
+                        imageHTML = `<div class="entry-images"><img src="${post.images[0]}" alt="" onclick="openLightbox('${post.images[0]}')"></div>`;
+                    }
+
+                    entry.innerHTML = `
+                        <div class="entry-title">${title}</div>
+                        <div class="entry-date">${formattedDate}</div>
+                        ${moodHTML}
+                        <div class="entry-text">
+                            ${displayText.replace(/\n/g, '<br>')}
+                        </div>
+                        ${imageHTML}
+                        <div class="entry-meta">
+                            <a href="#">${post.comments || 0} comments</a>
+                            <a href="#">❤️ ${post.likes || 0} likes</a>
+                            <a href="#">link</a>
+                        </div>
+                    `;
+
+                    container.appendChild(entry);
+                });
+
+            renderPagination();
+            window.scrollTo(0, 0);
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(allPosts.length / postsPerPage);
+
+            let html = '';
+
+            // Previous button
+            if (currentPage > 1) {
+                html += `<a href="#" onclick="changePage(${currentPage - 1}); return false;">« Previous</a>`;
+            } else {
+                html += `<span class="disabled">« Previous</span>`;
+            }
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<span class="current">${i}</span>`;
+                } else if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    html += `<a href="#" onclick="changePage(${i}); return false;">${i}</a>`;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    html += `<span>...</span>`;
+                }
+            }
+
+            // Next button
+            if (currentPage < totalPages) {
+                html += `<a href="#" onclick="changePage(${currentPage + 1}); return false;">Next »</a>`;
+            } else {
+                html += `<span class="disabled">Next »</span>`;
+            }
+
+            pagination.innerHTML = html;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderPosts(page);
+        }
+
+        function filterPosts(filterFn) {
+            const container = document.getElementById('posts-container');
+            const postsData = window.allPostsData;
+
+            allPosts = Object.entries(postsData)
+                .map(([id, post]) => ({ id, ...post }))
+                .filter(post => post.text && post.text.trim() !== '')
+                .filter(filterFn)
+                .sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            currentPage = 1;
+            renderPosts(1);
+        }
+
+        function showAllPosts() {
+            const postsData = window.allPostsData;
+            allPosts = Object.entries(postsData)
+                .map(([id, post]) => ({ id, ...post }))
+                .filter(post => post.text && post.text.trim() !== '')
+                .sort((a, b) => new Date(b.time) - new Date(a.time));
+            currentPage = 1;
+            renderPosts(1);
+        }
+
+        function filterByMonth(month) {
+            filterPosts(post => {
+                if (!post.time) return false;
+                const postDate = new Date(post.time);
+                const postMonth = `${postDate.getFullYear()}-${String(postDate.getMonth() + 1).padStart(2, '0')}`;
+                const postYear = String(postDate.getFullYear());
+                return postMonth.startsWith(month) || postYear === month;
+            });
+        }
+
+        function filterByTopic(keywords) {
+            const keywordList = keywords.toLowerCase().split('|');
+            filterPosts(post => {
+                if (!post.text) return false;
+                const text = post.text.toLowerCase();
+                return keywordList.some(keyword => text.includes(keyword));
+            });
+        }
+
+        // Load posts
+        fetch('posts_with_images.json')
+            .then(response => response.json())
+            .then(postsData => {
+                window.allPostsData = postsData;
+
+                // Convert posts object to array and sort by date
+                allPosts = Object.entries(postsData)
+                    .map(([id, post]) => ({ id, ...post }))
+                    .filter(post => post.text && post.text.trim() !== '')
+                    .sort((a, b) => new Date(b.time) - new Date(a.time));
+
+                renderPosts(1);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('posts-container').innerHTML =
+                    '<div class="loading">Error loading entries</div>';
+            });
+
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Contact form functions
+        function openContactForm() {
+            document.getElementById('contactModal').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function closeContactForm() {
+            document.getElementById('contactModal').classList.remove('active');
+            if (!sidebar.classList.contains('active')) {
+                document.getElementById('overlay').classList.remove('active');
+            }
+        }
+
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // For now, just show an alert. You can replace this with actual form submission
+            alert(`Thank you ${name}! Your message has been sent.\n\nThis is a demo - in production, this would send your message to Trâm Anh.`);
+
+            // Reset form and close modal
+            this.reset();
+            closeContactForm();
+        });
+
+        // Close contact form when clicking overlay
+        overlay.addEventListener('click', function() {
+            closeContactForm();
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Lightbox functions
+        function openLightbox(imageSrc) {
+            document.getElementById('lightboxImage').src = imageSrc;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        // Close lightbox on click
+        document.getElementById('lightbox').addEventListener('click', closeLightbox);
+        document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+
+        // Prevent closing when clicking on image itself
+        document.getElementById('lightboxImage').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeContactForm();
+            }
+        });
+    </script>
+</body>
+</html>
