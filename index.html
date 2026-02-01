@@ -564,12 +564,9 @@
                     const hour12 = hours % 12 || 12;
                     const formattedDate = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} - ${hour12}:${minutes} ${ampm}`;
 
-                    // Extract title - show full first line
-                    const title = post.text.split('\n')[0];
-
-                    // Get text without the first line (since it's used as title)
-                    const textLines = post.text.split('\n');
-                    let displayText = textLines.slice(1).join('\n').trim();
+                    // Use title and body fields
+                    const title = post.title || '';
+                    let displayText = post.body || '';
 
                     // Get mood from post data (only if it exists)
                     let moodHTML = '';
@@ -654,7 +651,7 @@
 
             allPosts = Object.entries(postsData)
                 .map(([id, post]) => ({ id, ...post }))
-                .filter(post => post.text && post.text.trim() !== '')
+                .filter(post => post.title || post.body)
                 .filter(filterFn)
                 .sort((a, b) => new Date(b.time) - new Date(a.time));
 
@@ -666,7 +663,7 @@
             const postsData = window.allPostsData;
             allPosts = Object.entries(postsData)
                 .map(([id, post]) => ({ id, ...post }))
-                .filter(post => post.text && post.text.trim() !== '')
+                .filter(post => post.title || post.body)
                 .sort((a, b) => new Date(b.time) - new Date(a.time));
             currentPage = 1;
             renderPosts(1);
@@ -685,9 +682,8 @@
         function filterByTopic(keywords) {
             const keywordList = keywords.toLowerCase().split('|');
             filterPosts(post => {
-                if (!post.text) return false;
-                const text = post.text.toLowerCase();
-                return keywordList.some(keyword => text.includes(keyword));
+                const fullText = ((post.title || '') + ' ' + (post.body || '')).toLowerCase();
+                return keywordList.some(keyword => fullText.includes(keyword));
             });
         }
 
@@ -700,7 +696,7 @@
                 // Convert posts object to array and sort by date
                 allPosts = Object.entries(postsData)
                     .map(([id, post]) => ({ id, ...post }))
-                    .filter(post => post.text && post.text.trim() !== '')
+                    .filter(post => post.title || post.body)
                     .sort((a, b) => new Date(b.time) - new Date(a.time));
 
                 renderPosts(1);

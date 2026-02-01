@@ -663,7 +663,7 @@
                     month: '2-digit',
                     year: 'numeric'
                 });
-                const title = post.text.split('\n')[0];
+                const title = post.title || '';
                 const displayTitle = title.length > 60 ? title.substring(0, 60) + '...' : title;
                 const mood = post.mood || '-';
 
@@ -683,13 +683,10 @@
 
         function editPost(postId) {
             const post = posts[postId];
-            const lines = post.text.split('\n');
-            const title = lines[0];
-            const content = lines.slice(1).join('\n');
 
             document.getElementById('edit-post-id').value = postId;
-            document.getElementById('edit-title').value = title;
-            document.getElementById('edit-text').value = content;
+            document.getElementById('edit-title').value = post.title || '';
+            document.getElementById('edit-text').value = post.body || '';
             document.getElementById('edit-mood').value = post.mood || '';
             document.getElementById('edit-time').value = new Date(post.time).toISOString().slice(0, 16);
             document.getElementById('edit-modal').classList.add('active');
@@ -743,12 +740,13 @@
             e.preventDefault();
             const postId = document.getElementById('edit-post-id').value;
             const title = document.getElementById('edit-title').value;
-            const text = document.getElementById('edit-text').value;
+            const body = document.getElementById('edit-text').value;
             const mood = document.getElementById('edit-mood').value;
             const time = new Date(document.getElementById('edit-time').value).toISOString();
 
-            // Combine title and text with newline
-            posts[postId].text = title + '\n' + text;
+            // Save title and body separately
+            posts[postId].title = title;
+            posts[postId].body = body;
             posts[postId].mood = mood || null;
             posts[postId].time = time;
 
@@ -760,14 +758,14 @@
         document.getElementById('new-post-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const title = document.getElementById('new-title').value;
-            const text = document.getElementById('new-text').value;
+            const body = document.getElementById('new-text').value;
             const mood = document.getElementById('new-mood').value;
 
             const newId = Date.now().toString();
-            const fullText = title + '\n' + text;
 
             posts[newId] = {
-                text: fullText,
+                title: title,
+                body: body,
                 time: new Date().toISOString(),
                 likes: 0,
                 comments: 0,
