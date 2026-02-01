@@ -157,15 +157,18 @@
         .entry-images img {
             width: 100%;
             height: 250px;
-            object-fit: contain;
-            background: #f5f5f5;
+            object-fit: cover;
             border: 2px solid #999;
-            padding: 5px;
         }
 
         @media (max-width: 768px) {
+            .entry-images {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 8px;
+            }
+
             .entry-images img {
-                height: 200px;
+                height: 180px;
             }
         }
 
