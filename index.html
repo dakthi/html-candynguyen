@@ -619,14 +619,41 @@
                 html += `<span class="disabled">‹</span>`;
             }
 
-            // Page numbers - show current, 1 before, and 1 after
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === currentPage) {
-                    html += `<span class="current">${i}</span>`;
-                } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                    html += `<a href="#" onclick="changePage(${i}); return false;">${i}</a>`;
-                } else if (i === currentPage - 2 || i === currentPage + 2) {
-                    html += `<span>...</span>`;
+            // Page numbers - show all if not too many, otherwise use range
+            if (totalPages <= 10) {
+                // Show all pages if 10 or less
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentPage) {
+                        html += `<span class="current">${i}</span>`;
+                    } else {
+                        html += `<a href="#" onclick="changePage(${i}); return false;">${i}</a>`;
+                    }
+                }
+            } else {
+                // Use ellipsis for many pages
+                const range = 2;
+                let showEllipsisStart = false;
+                let showEllipsisEnd = false;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const isFirstOrLast = i === 1 || i === totalPages;
+                    const isNearCurrent = i >= currentPage - range && i <= currentPage + range;
+
+                    if (isFirstOrLast || isNearCurrent) {
+                        if (i === currentPage) {
+                            html += `<span class="current">${i}</span>`;
+                        } else {
+                            html += `<a href="#" onclick="changePage(${i}); return false;">${i}</a>`;
+                        }
+                        showEllipsisStart = false;
+                        showEllipsisEnd = false;
+                    } else if (i < currentPage && !showEllipsisStart) {
+                        html += `<span>...</span>`;
+                        showEllipsisStart = true;
+                    } else if (i > currentPage && !showEllipsisEnd) {
+                        html += `<span>...</span>`;
+                        showEllipsisEnd = true;
+                    }
                 }
             }
 
