@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyễn Trâm Anh - Sống trong tâm tình biết ơn</title>
+    <title>candy.nguyen.5832</title>
     <style>
         * {
             margin: 0;
@@ -269,6 +269,19 @@
             .mood {
                 font-size: 9px;
             }
+
+            .pagination {
+                padding: 15px 10px;
+            }
+
+            .pagination a,
+            .pagination span {
+                padding: 8px 12px;
+                margin: 2px;
+                font-size: 12px;
+                min-width: 36px;
+                text-align: center;
+            }
         }
 
         .overlay {
@@ -433,6 +446,59 @@
         .entry img {
             cursor: pointer;
         }
+
+        .text-size-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .text-size-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #336699;
+            color: #336699;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .text-size-btn:hover {
+            background: #336699;
+            color: white;
+        }
+
+        .text-size-btn.active {
+            background: #336699;
+            color: white;
+        }
+
+        body.text-small {
+            font-size: 11px;
+        }
+
+        body.text-small .entry-title {
+            font-size: 14px;
+        }
+
+        body.text-small .entry-text {
+            font-size: 11px;
+        }
+
+        body.text-large {
+            font-size: 14px;
+        }
+
+        body.text-large .entry-title {
+            font-size: 18px;
+        }
+
+        body.text-large .entry-text {
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -468,7 +534,7 @@
 
     <div class="blog">
         <div class="header">
-            <h1>nguyen_tramanh</h1>
+            <h1>candy.nguyen.5832</h1>
             <p>Sống trong tâm tình biết ơn</p>
         </div>
 
@@ -490,6 +556,13 @@
                     <li><a href="#" onclick="openContactForm(); return false;">Write to me</a></li>
                     <li><a href="#" onclick="showAllPosts(); return false;">All Posts</a></li>
                 </ul>
+
+                <h3>Text Size</h3>
+                <div class="text-size-controls">
+                    <button onclick="changeFontSize('small'); return false;" class="text-size-btn">A-</button>
+                    <button onclick="changeFontSize('medium'); return false;" class="text-size-btn">A</button>
+                    <button onclick="changeFontSize('large'); return false;" class="text-size-btn">A+</button>
+                </div>
 
                 <h3>Archives</h3>
                 <ul>
@@ -762,6 +835,39 @@
                 closeLightbox();
                 closeContactForm();
             }
+        });
+
+        // Font size control
+        function changeFontSize(size) {
+            const body = document.body;
+            body.classList.remove('text-small', 'text-large');
+
+            if (size === 'small') {
+                body.classList.add('text-small');
+            } else if (size === 'large') {
+                body.classList.add('text-large');
+            }
+
+            // Update active button
+            document.querySelectorAll('.text-size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Save preference
+            localStorage.setItem('textSize', size);
+        }
+
+        // Load saved text size preference
+        window.addEventListener('load', function() {
+            const savedSize = localStorage.getItem('textSize') || 'medium';
+            if (savedSize !== 'medium') {
+                document.body.classList.add('text-' + savedSize);
+            }
+
+            // Set active button
+            const buttons = document.querySelectorAll('.text-size-btn');
+            if (savedSize === 'small') buttons[0].classList.add('active');
+            else if (savedSize === 'medium') buttons[1].classList.add('active');
+            else if (savedSize === 'large') buttons[2].classList.add('active');
         });
     </script>
 </body>
