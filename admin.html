@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin CMS - Nguyễn Trâm Anh</title>
+    <title>Admin Panel - candy.nguyen.5832</title>
     <style>
         * {
             margin: 0;
@@ -15,11 +15,11 @@
             font-family: Verdana, Arial, sans-serif;
             background: #e9ecef url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect fill="%23dde3e9" width="20" height="20"/><circle fill="%23c8d2db" cx="10" cy="10" r="1" opacity="0.5"/></svg>');
             color: #333;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .blog {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 20px auto;
             background: white;
             border: 1px solid #999;
@@ -28,123 +28,92 @@
         .header {
             background: linear-gradient(to bottom, #6699cc 0%, #4477aa 100%);
             color: white;
-            padding: 20px;
+            padding: 15px 20px;
             border-bottom: 3px solid #336699;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        }
+
+        .header table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: normal;
+            margin: 0;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
+        .header-links {
+            text-align: right;
+            font-size: 10px;
         }
 
-        .header-actions span {
-            font-size: 11px;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .header-actions a, .header-actions button {
+        .header-links a, .header-links button {
             color: white;
-            text-decoration: none;
-            font-size: 11px;
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
-            border-radius: 3px;
-            border: 1px solid rgba(255,255,255,0.3);
+            text-decoration: underline;
+            background: none;
+            border: none;
             cursor: pointer;
-        }
-
-        .header-actions a:hover, .header-actions button:hover {
-            background: rgba(255,255,255,0.3);
+            font-size: 10px;
+            font-family: Verdana, Arial, sans-serif;
+            margin-left: 10px;
         }
 
         .content {
-            padding: 20px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 0;
-        }
-
-        .tab-btn {
-            padding: 10px 20px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            color: #666;
-        }
-
-        .tab-btn.active {
-            background: white;
-            color: #336699;
-            border-top: 3px solid #336699;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 20px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .posts-list {
-            display: grid;
-            gap: 15px;
-        }
-
-        .post-item {
-            background: white;
             padding: 15px;
-            border: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .post-info h3 {
+        .admin-box {
+            background: #f5f5f5;
+            border: 2px solid #336699;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admin-box h2 {
             font-size: 14px;
             color: #336699;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px dotted #336699;
         }
 
-        .post-info p {
-            font-size: 11px;
-            color: #666;
+        table.posts-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 1px solid #999;
         }
 
-        .post-actions {
-            display: flex;
-            gap: 10px;
+        table.posts-table th {
+            background: #336699;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        table.posts-table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            font-size: 10px;
+        }
+
+        table.posts-table tr:hover {
+            background: #f9f9f9;
         }
 
         .btn {
-            padding: 6px 12px;
-            font-size: 11px;
+            padding: 4px 10px;
+            font-size: 10px;
             border: 1px solid #336699;
             background: white;
             color: #336699;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
+            font-family: Verdana, Arial, sans-serif;
         }
 
         .btn:hover {
@@ -155,6 +124,7 @@
         .btn-primary {
             background: #336699;
             color: white;
+            font-weight: bold;
         }
 
         .btn-primary:hover {
@@ -169,32 +139,40 @@
         .btn-danger:hover {
             background: #c44;
             color: white;
+            border-color: #c44;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-table {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            font-family: Verdana, Arial, sans-serif;
-            font-size: 12px;
+            border-collapse: collapse;
         }
 
-        .form-group textarea {
-            min-height: 200px;
+        .form-table td {
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .form-table label {
+            font-size: 10px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .form-table input[type="text"],
+        .form-table input[type="datetime-local"],
+        .form-table textarea,
+        .form-table select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #999;
+            background: white;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 11px;
+        }
+
+        .form-table textarea {
+            min-height: 150px;
             resize: vertical;
         }
 
@@ -205,69 +183,85 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             z-index: 1000;
-            justify-content: center;
-            align-items: center;
         }
 
         .modal.active {
-            display: flex;
+            display: block;
         }
 
         .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: white;
-            padding: 30px;
-            max-width: 600px;
+            border: 3px solid #336699;
+            max-width: 650px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            border: 2px solid #336699;
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            background: #336699;
+            color: white;
+            padding: 10px 15px;
         }
 
         .modal-header h2 {
-            font-size: 18px;
-            color: #336699;
+            font-size: 14px;
+            font-weight: bold;
+            float: left;
         }
 
         .modal-close {
+            float: right;
             background: none;
             border: none;
-            font-size: 24px;
+            color: white;
+            font-size: 18px;
             cursor: pointer;
-            color: #999;
+            font-weight: bold;
         }
 
-        .status-message {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 3px;
-            font-size: 11px;
+        .modal-body {
+            padding: 15px;
+        }
+
+        .status-box {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 2px solid;
+            font-size: 10px;
         }
 
         .status-success {
             background: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border-color: #c3e6cb;
         }
 
         .status-error {
             background: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border-color: #f5c6cb;
         }
 
         .status-info {
             background: #d1ecf1;
             color: #0c5460;
-            border: 1px solid #bee5eb;
+            border-color: #bee5eb;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
         }
 
         @media (max-width: 768px) {
@@ -276,21 +270,18 @@
                 border: none;
             }
 
-            .header {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
+            table.posts-table {
+                font-size: 9px;
             }
 
-            .tabs {
-                overflow-x: auto;
-                flex-wrap: nowrap;
+            table.posts-table th,
+            table.posts-table td {
+                padding: 5px;
             }
 
-            .post-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+            .btn {
+                padding: 3px 6px;
+                font-size: 9px;
             }
         }
     </style>
@@ -298,57 +289,83 @@
 <body>
     <div class="blog">
         <div class="header">
-            <h1>Admin CMS</h1>
-            <div class="header-actions">
-                <span id="save-status"></span>
-                <a href="index.html">Xem trang</a>
-                <button onclick="logout()">Đăng xuất</button>
-            </div>
+            <table>
+                <tr>
+                    <td><h1>candy.nguyen.5832 - Admin Panel</h1></td>
+                    <td class="header-links">
+                        <span id="save-status"></span>
+                        <a href="index.html">Trang chủ</a>
+                        <button onclick="logout()">Đăng xuất</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div class="content">
             <div id="status-container"></div>
 
-            <div class="tabs">
-                <button class="tab-btn active" onclick="showTab('posts')">Bài viết</button>
-                <button class="tab-btn" onclick="showTab('new-post')">Thêm bài mới</button>
+            <!-- Posts List -->
+            <div class="admin-box">
+                <h2>» Quản lý bài viết</h2>
+                <p style="margin-bottom: 10px; font-size: 10px;">
+                    <button class="btn btn-primary" onclick="showNewPostForm()">+ Thêm bài mới</button>
+                </p>
+                <table class="posts-table" id="posts-table">
+                    <thead>
+                        <tr>
+                            <th width="50%">Tiêu đề</th>
+                            <th width="20%">Ngày đăng</th>
+                            <th width="15%">Mood</th>
+                            <th width="15%">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="posts-list">
+                        <tr><td colspan="4" align="center">Đang tải...</td></tr>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- Posts List Tab -->
-            <div id="tab-posts" class="tab-content active">
-                <h2 style="margin-bottom: 20px; color: #336699;">Danh sách bài viết (148)</h2>
-                <div class="posts-list" id="posts-list">
-                    <p>Đang tải...</p>
-                </div>
-            </div>
-
-            <!-- New Post Tab -->
-            <div id="tab-new-post" class="tab-content">
-                <h2 style="margin-bottom: 20px; color: #336699;">Thêm bài viết mới</h2>
+            <!-- New Post Form (hidden by default) -->
+            <div id="new-post-box" class="admin-box" style="display:none;">
+                <h2>» Thêm bài viết mới</h2>
                 <form id="new-post-form">
-                    <div class="form-group">
-                        <label>Tiêu đề (dòng đầu tiên)</label>
-                        <input type="text" id="new-title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nội dung bài viết</label>
-                        <textarea id="new-text" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Mood</label>
-                        <select id="new-mood">
-                            <option value="">Không có mood</option>
-                            <option value="❤️ cảm thấy biết ơn">❤️ cảm thấy biết ơn</option>
-                            <option value="😊 cảm thấy vui vẻ">😊 cảm thấy vui vẻ</option>
-                            <option value="🤣 cảm thấy buồn cười">🤣 cảm thấy buồn cười</option>
-                            <option value="💕 cảm thấy yêu thương">💕 cảm thấy yêu thương</option>
-                            <option value="📝 cảm thấy muốn chia sẻ">📝 cảm thấy muốn chia sẻ</option>
-                            <option value="😌 cảm thấy bình yên">😌 cảm thấy bình yên</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Tạo bài viết</button>
+                    <table class="form-table">
+                        <tr>
+                            <td width="20%"><label>Tiêu đề:</label></td>
+                            <td><input type="text" id="new-title" required></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Nội dung:</label></td>
+                            <td><textarea id="new-text" required></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label>Mood:</label></td>
+                            <td>
+                                <select id="new-mood">
+                                    <option value="">Không có mood</option>
+                                    <option value="❤️ cảm thấy biết ơn">❤️ cảm thấy biết ơn</option>
+                                    <option value="😊 cảm thấy vui vẻ">😊 cảm thấy vui vẻ</option>
+                                    <option value="🤣 cảm thấy buồn cười">🤣 cảm thấy buồn cười</option>
+                                    <option value="💕 cảm thấy yêu thương">💕 cảm thấy yêu thương</option>
+                                    <option value="📝 cảm thấy muốn chia sẻ">📝 cảm thấy muốn chia sẻ</option>
+                                    <option value="😌 cảm thấy bình yên">😌 cảm thấy bình yên</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Tạo bài viết</button>
+                                <button type="button" class="btn" onclick="hideNewPostForm()">Hủy</button>
+                            </td>
+                        </tr>
+                    </table>
                 </form>
             </div>
+        </div>
+
+        <div class="footer">
+            built by Thi - a Charted consultant
         </div>
     </div>
 
@@ -358,35 +375,48 @@
             <div class="modal-header">
                 <h2>Chỉnh sửa bài viết</h2>
                 <button class="modal-close" onclick="closeEditModal()">&times;</button>
+                <div style="clear:both;"></div>
             </div>
-            <form id="edit-form">
-                <input type="hidden" id="edit-post-id">
-                <div class="form-group">
-                    <label>Tiêu đề (dòng đầu tiên)</label>
-                    <input type="text" id="edit-title" required>
-                </div>
-                <div class="form-group">
-                    <label>Nội dung đầy đủ</label>
-                    <textarea id="edit-text" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Mood</label>
-                    <select id="edit-mood">
-                        <option value="">Không có mood</option>
-                        <option value="❤️ cảm thấy biết ơn">❤️ cảm thấy biết ơn</option>
-                        <option value="😊 cảm thấy vui vẻ">😊 cảm thấy vui vẻ</option>
-                        <option value="🤣 cảm thấy buồn cười">🤣 cảm thấy buồn cười</option>
-                        <option value="💕 cảm thấy yêu thương">💕 cảm thấy yêu thương</option>
-                        <option value="📝 cảm thấy muốn chia sẻ">📝 cảm thấy muốn chia sẻ</option>
-                        <option value="😌 cảm thấy bình yên">😌 cảm thấy bình yên</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Ngày đăng</label>
-                    <input type="datetime-local" id="edit-time" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-            </form>
+            <div class="modal-body">
+                <form id="edit-form">
+                    <input type="hidden" id="edit-post-id">
+                    <table class="form-table">
+                        <tr>
+                            <td width="20%"><label>Tiêu đề:</label></td>
+                            <td><input type="text" id="edit-title" required></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Nội dung đầy đủ:</label></td>
+                            <td><textarea id="edit-text" required></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label>Mood:</label></td>
+                            <td>
+                                <select id="edit-mood">
+                                    <option value="">Không có mood</option>
+                                    <option value="❤️ cảm thấy biết ơn">❤️ cảm thấy biết ơn</option>
+                                    <option value="😊 cảm thấy vui vẻ">😊 cảm thấy vui vẻ</option>
+                                    <option value="🤣 cảm thấy buồn cười">🤣 cảm thấy buồn cười</option>
+                                    <option value="💕 cảm thấy yêu thương">💕 cảm thấy yêu thương</option>
+                                    <option value="📝 cảm thấy muốn chia sẻ">📝 cảm thấy muốn chia sẻ</option>
+                                    <option value="😌 cảm thấy bình yên">😌 cảm thấy bình yên</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Ngày đăng:</label></td>
+                            <td><input type="datetime-local" id="edit-time" required></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                <button type="button" class="btn" onclick="closeEditModal()">Hủy</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -405,16 +435,18 @@
 
         function showStatus(message, type) {
             const container = document.getElementById('status-container');
-            container.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            container.innerHTML = `<div class="status-box status-${type}">${message}</div>`;
             setTimeout(() => container.innerHTML = '', 5000);
         }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        function showNewPostForm() {
+            document.getElementById('new-post-box').style.display = 'block';
+            window.scrollTo(0, document.getElementById('new-post-box').offsetTop - 20);
+        }
 
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
+        function hideNewPostForm() {
+            document.getElementById('new-post-box').style.display = 'none';
+            document.getElementById('new-post-form').reset();
         }
 
         async function loadPosts() {
@@ -443,20 +475,31 @@
                 return new Date(b[1].time) - new Date(a[1].time);
             });
 
+            if (postsArray.length === 0) {
+                list.innerHTML = '<tr><td colspan="4" align="center">Chưa có bài viết nào</td></tr>';
+                return;
+            }
+
             list.innerHTML = postsArray.map(([id, post]) => {
-                const date = new Date(post.time).toLocaleString('vi-VN');
-                const title = post.text.split('\n')[0].substring(0, 80);
+                const date = new Date(post.time).toLocaleDateString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                const title = post.text.split('\n')[0];
+                const displayTitle = title.length > 60 ? title.substring(0, 60) + '...' : title;
+                const mood = post.mood || '-';
+
                 return `
-                    <div class="post-item">
-                        <div class="post-info">
-                            <h3>${title}...</h3>
-                            <p>${date} | ${post.mood || 'Không có mood'}</p>
-                        </div>
-                        <div class="post-actions">
+                    <tr>
+                        <td>${displayTitle}</td>
+                        <td>${date}</td>
+                        <td>${mood}</td>
+                        <td>
                             <button class="btn" onclick="editPost('${id}')">Sửa</button>
                             <button class="btn btn-danger" onclick="deletePost('${id}')">Xóa</button>
-                        </div>
-                    </div>
+                        </td>
+                    </tr>
                 `;
             }).join('');
         }
@@ -526,8 +569,8 @@
             posts[postId].mood = mood || null;
             posts[postId].time = time;
 
-            await savePosts('Chỉnh sửa bài viết');
             closeEditModal();
+            await savePosts('Chỉnh sửa bài viết');
         });
 
         // New post form submit
