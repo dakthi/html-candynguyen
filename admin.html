@@ -264,44 +264,210 @@
             color: #666;
         }
 
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .main-layout {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .sidebar {
+            width: 180px;
+            background: #f5f5f5;
+            border-left: 1px solid #ddd;
+            padding: 15px;
+            font-size: 11px;
+        }
+
+        .sidebar h3 {
+            font-size: 12px;
+            color: #336699;
+            margin: 0 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 6px;
+        }
+
+        .sidebar a {
+            color: #336699;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        .hamburger {
+            display: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px 0;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        body.sidebar-open {
+            overflow: hidden;
+        }
+
+        .save-status-header {
+            font-size: 10px;
+            color: white;
+            margin-top: 5px;
+        }
+
         @media (max-width: 768px) {
             .blog {
                 margin: 0;
                 border: none;
             }
 
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .header {
+                position: relative;
+            }
+
+            .header h1 {
+                font-size: 14px;
+                padding-right: 50px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                right: -200px;
+                width: 200px;
+                height: 100vh;
+                z-index: 1000;
+                transition: right 0.3s ease;
+                box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+                overflow-y: auto;
+            }
+
+            .sidebar.active {
+                right: 0;
+            }
+
+            .content {
+                padding: 15px 10px;
+            }
+
+            .admin-box {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
             table.posts-table {
-                font-size: 9px;
+                font-size: 10px;
             }
 
             table.posts-table th,
             table.posts-table td {
-                padding: 5px;
+                padding: 5px 3px;
+            }
+
+            /* Hide mood column on mobile */
+            table.posts-table th:nth-child(3),
+            table.posts-table td:nth-child(3) {
+                display: none;
             }
 
             .btn {
-                padding: 3px 6px;
+                padding: 4px 6px;
                 font-size: 9px;
+                margin: 2px 0;
+                display: block;
+                width: 100%;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+
+            .form-table {
+                font-size: 10px;
+            }
+
+            .form-table input,
+            .form-table textarea,
+            .form-table select {
+                font-size: 11px;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
             }
         }
     </style>
 </head>
 <body>
+    <div class="overlay" id="overlay"></div>
+
     <div class="blog">
         <div class="header">
-            <table>
-                <tr>
-                    <td><h1>candy.nguyen.5832 - Admin Panel</h1></td>
-                    <td class="header-links">
-                        <span id="save-status"></span>
-                        <a href="index.html">Trang chủ</a>
-                        <button onclick="logout()">Đăng xuất</button>
-                    </td>
-                </tr>
-            </table>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <h1>candy.nguyen.5832 - Admin Panel</h1>
+            <div class="save-status-header">
+                <span id="save-status"></span>
+            </div>
         </div>
 
-        <div class="content">
+        <div class="main-layout">
+            <div class="content">
             <div id="status-container"></div>
 
             <!-- Posts List -->
@@ -310,19 +476,21 @@
                 <p style="margin-bottom: 10px; font-size: 10px;">
                     <button class="btn btn-primary" onclick="showNewPostForm()">+ Thêm bài mới</button>
                 </p>
-                <table class="posts-table" id="posts-table">
-                    <thead>
-                        <tr>
-                            <th width="50%">Tiêu đề</th>
-                            <th width="20%">Ngày đăng</th>
-                            <th width="15%">Mood</th>
-                            <th width="15%">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody id="posts-list">
-                        <tr><td colspan="4" align="center">Đang tải...</td></tr>
-                    </tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table class="posts-table" id="posts-table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Tiêu đề</th>
+                                <th width="20%">Ngày đăng</th>
+                                <th width="15%">Mood</th>
+                                <th width="15%">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posts-list">
+                            <tr><td colspan="4" align="center">Đang tải...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- New Post Form (hidden by default) -->
@@ -362,6 +530,15 @@
                     </table>
                 </form>
             </div>
+        </div>
+
+        <div class="sidebar" id="sidebar">
+            <h3>Quản lý</h3>
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="#" onclick="logout(); return false;">Đăng xuất</a></li>
+            </ul>
+        </div>
         </div>
 
         <div class="footer">
@@ -506,9 +683,13 @@
 
         function editPost(postId) {
             const post = posts[postId];
+            const lines = post.text.split('\n');
+            const title = lines[0];
+            const content = lines.slice(1).join('\n');
+
             document.getElementById('edit-post-id').value = postId;
-            document.getElementById('edit-title').value = post.text.split('\n')[0];
-            document.getElementById('edit-text').value = post.text;
+            document.getElementById('edit-title').value = title;
+            document.getElementById('edit-text').value = content;
             document.getElementById('edit-mood').value = post.mood || '';
             document.getElementById('edit-time').value = new Date(post.time).toISOString().slice(0, 16);
             document.getElementById('edit-modal').classList.add('active');
@@ -561,11 +742,13 @@
         document.getElementById('edit-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const postId = document.getElementById('edit-post-id').value;
+            const title = document.getElementById('edit-title').value;
             const text = document.getElementById('edit-text').value;
             const mood = document.getElementById('edit-mood').value;
             const time = new Date(document.getElementById('edit-time').value).toISOString();
 
-            posts[postId].text = text;
+            // Combine title and text with newline
+            posts[postId].text = title + '\n' + text;
             posts[postId].mood = mood || null;
             posts[postId].time = time;
 
@@ -604,6 +787,26 @@
                 window.location.href = 'login.html';
             }
         }
+
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.classList.remove('sidebar-open');
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
 
         // Load posts on page load
         loadPosts();
