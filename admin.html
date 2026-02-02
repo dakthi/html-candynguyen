@@ -1254,8 +1254,311 @@
             renderPosts();
         });
 
+        // ============================================
+        // PRODUCTS FUNCTIONS
+        // ============================================
+
+        async function loadProducts() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PRODUCTS_PATH}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await res.json();
+                products = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                productsSha = data.sha;
+                renderProducts();
+            } catch (e) {
+                console.error('Load products error:', e);
+                showStatus('Lỗi khi tải sản phẩm: ' + e.message, 'error');
+            }
+        }
+
+        function renderProducts() {
+            const list = document.getElementById('products-list');
+            const searchTerm = document.getElementById('productSearchBox').value.toLowerCase();
+
+            let productsArray = Object.entries(products)
+                .map(([id, prod]) => ({ id, ...prod }))
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            if (searchTerm) {
+                productsArray = productsArray.filter(prod =>
+                    ((prod.name || '') + ' ' + (prod.category || '') + ' ' + (prod.description || ''))
+                        .toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (productsArray.length === 0) {
+                list.innerHTML = '<tr><td colspan="6" align="center">Không tìm thấy sản phẩm nào</td></tr>';
+                return;
+            }
+
+            list.innerHTML = productsArray.map(prod => `
+                <tr>
+                    <td>${prod.image ? `<img src="${prod.image}" style="width:50px;height:50px;object-fit:cover;">` : '-'}</td>
+                    <td>${prod.name}</td>
+                    <td>${prod.category || '-'}</td>
+                    <td>${prod.price}</td>
+                    <td>${prod.available ? 'Có' : 'Hết'}</td>
+                    <td>
+                        <button class="btn" onclick="editProduct('${prod.id}')">Sửa</button>
+                        <button class="btn btn-danger" onclick="deleteProduct('${prod.id}')">Xóa</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showNewProductForm() {
+            document.getElementById('new-product-box').style.display = 'block';
+            document.getElementById('new-product-form').reset();
+        }
+
+        function hideNewProductForm() {
+            document.getElementById('new-product-box').style.display = 'none';
+        }
+
+        async function saveProducts(message = 'Cập nhật sản phẩm') {
+            try {
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2))));
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PRODUCTS_PATH}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message + ' (qua CMS)',
+                        content: content,
+                        sha: productsSha
+                    })
+                });
+
+                if (!res.ok) throw new Error('Save failed');
+
+                const data = await res.json();
+                productsSha = data.content.sha;
+                showStatus('Đã lưu sản phẩm!', 'success');
+                renderProducts();
+            } catch (e) {
+                console.error('Save products error:', e);
+                showStatus('Lỗi khi lưu: ' + e.message, 'error');
+            }
+        }
+
+        document.getElementById('new-product-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('new-product-id').value.trim() ||
+                       'product-' + Date.now();
+            const name = document.getElementById('new-product-name').value.trim();
+            const category = document.getElementById('new-product-category').value.trim();
+            const description = document.getElementById('new-product-description').value.trim();
+            const price = document.getElementById('new-product-price').value.trim();
+            const link = document.getElementById('new-product-link').value.trim();
+            const available = document.getElementById('new-product-available').checked;
+            const order = parseInt(document.getElementById('new-product-order').value) || 0;
+
+            // Handle image upload
+            let imagePath = '';
+            const imageFile = document.getElementById('new-product-image').files[0];
+            if (imageFile) {
+                try {
+                    showStatus('Đang tải ảnh lên...', 'info');
+                    const webpBlob = await resizeAndConvertToWebP(imageFile);
+                    const imageName = `product_${id}.webp`;
+                    imagePath = `images/${imageName}`;
+                    await uploadImageToGitHub(webpBlob, imagePath);
+                } catch (e) {
+                    showStatus('Lỗi khi tải ảnh: ' + e.message, 'error');
+                    return;
+                }
+            }
+
+            products[id] = {
+                name,
+                category,
+                description,
+                price,
+                image: imagePath,
+                link,
+                available,
+                order
+            };
+
+            await saveProducts(`Thêm sản phẩm ${name}`);
+            hideNewProductForm();
+        });
+
+        async function deleteProduct(id) {
+            if (!confirm('Xóa sản phẩm này?')) return;
+            delete products[id];
+            await saveProducts(`Xóa sản phẩm ${id}`);
+        }
+
+        function editProduct(id) {
+            // TODO: Add edit modal for products
+            alert('Chức năng sửa sản phẩm đang được phát triển. Hiện tại vui lòng xóa và tạo lại.');
+        }
+
+        document.getElementById('productSearchBox').addEventListener('input', renderProducts);
+
+        // ============================================
+        // SERVICES FUNCTIONS
+        // ============================================
+
+        async function loadServices() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${SERVICES_PATH}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const data = await res.json();
+                services = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                servicesSha = data.sha;
+                renderServices();
+            } catch (e) {
+                console.error('Load services error:', e);
+                showStatus('Lỗi khi tải dịch vụ: ' + e.message, 'error');
+            }
+        }
+
+        function renderServices() {
+            const list = document.getElementById('services-list');
+            const searchTerm = document.getElementById('serviceSearchBox').value.toLowerCase();
+
+            let servicesArray = Object.entries(services)
+                .map(([id, serv]) => ({ id, ...serv }))
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            if (searchTerm) {
+                servicesArray = servicesArray.filter(serv =>
+                    ((serv.name || '') + ' ' + (serv.category || '') + ' ' + (serv.description || ''))
+                        .toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (servicesArray.length === 0) {
+                list.innerHTML = '<tr><td colspan="7" align="center">Không tìm thấy dịch vụ nào</td></tr>';
+                return;
+            }
+
+            list.innerHTML = servicesArray.map(serv => `
+                <tr>
+                    <td>${serv.image ? `<img src="${serv.image}" style="width:50px;height:50px;object-fit:cover;">` : '-'}</td>
+                    <td>${serv.name}</td>
+                    <td>${serv.category || '-'}</td>
+                    <td>${serv.price}</td>
+                    <td>${serv.duration || '-'}</td>
+                    <td>${serv.available ? 'Có' : 'Không'}</td>
+                    <td>
+                        <button class="btn" onclick="editService('${serv.id}')">Sửa</button>
+                        <button class="btn btn-danger" onclick="deleteService('${serv.id}')">Xóa</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showNewServiceForm() {
+            document.getElementById('new-service-box').style.display = 'block';
+            document.getElementById('new-service-form').reset();
+        }
+
+        function hideNewServiceForm() {
+            document.getElementById('new-service-box').style.display = 'none';
+        }
+
+        async function saveServices(message = 'Cập nhật dịch vụ') {
+            try {
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(services, null, 2))));
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${SERVICES_PATH}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message + ' (qua CMS)',
+                        content: content,
+                        sha: servicesSha
+                    })
+                });
+
+                if (!res.ok) throw new Error('Save failed');
+
+                const data = await res.json();
+                servicesSha = data.content.sha;
+                showStatus('Đã lưu dịch vụ!', 'success');
+                renderServices();
+            } catch (e) {
+                console.error('Save services error:', e);
+                showStatus('Lỗi khi lưu: ' + e.message, 'error');
+            }
+        }
+
+        document.getElementById('new-service-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('new-service-id').value.trim() ||
+                       'service-' + Date.now();
+            const name = document.getElementById('new-service-name').value.trim();
+            const category = document.getElementById('new-service-category').value.trim();
+            const description = document.getElementById('new-service-description').value.trim();
+            const price = document.getElementById('new-service-price').value.trim();
+            const duration = document.getElementById('new-service-duration').value.trim();
+            const bookingRequired = document.getElementById('new-service-booking').checked;
+            const link = document.getElementById('new-service-link').value.trim();
+            const available = document.getElementById('new-service-available').checked;
+            const order = parseInt(document.getElementById('new-service-order').value) || 0;
+
+            // Handle image upload
+            let imagePath = '';
+            const imageFile = document.getElementById('new-service-image').files[0];
+            if (imageFile) {
+                try {
+                    showStatus('Đang tải ảnh lên...', 'info');
+                    const webpBlob = await resizeAndConvertToWebP(imageFile);
+                    const imageName = `service_${id}.webp`;
+                    imagePath = `images/${imageName}`;
+                    await uploadImageToGitHub(webpBlob, imagePath);
+                } catch (e) {
+                    showStatus('Lỗi khi tải ảnh: ' + e.message, 'error');
+                    return;
+                }
+            }
+
+            services[id] = {
+                name,
+                category,
+                description,
+                price,
+                duration,
+                bookingRequired,
+                image: imagePath,
+                link,
+                available,
+                order
+            };
+
+            await saveServices(`Thêm dịch vụ ${name}`);
+            hideNewServiceForm();
+        });
+
+        async function deleteService(id) {
+            if (!confirm('Xóa dịch vụ này?')) return;
+            delete services[id];
+            await saveServices(`Xóa dịch vụ ${id}`);
+        }
+
+        function editService(id) {
+            // TODO: Add edit modal for services
+            alert('Chức năng sửa dịch vụ đang được phát triển. Hiện tại vui lòng xóa và tạo lại.');
+        }
+
+        document.getElementById('serviceSearchBox').addEventListener('input', renderServices);
+
         // Load posts on page load
         loadPosts();
+        loadProducts();
+        loadServices();
         renderNewImages();
     </script>
 </body>
