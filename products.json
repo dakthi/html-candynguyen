@@ -1,0 +1,22 @@
+{
+  "example-product-1": {
+    "name": "Hoa hồng đỏ",
+    "category": "Hoa tươi",
+    "description": "Bó hoa hồng đỏ tươi 20 bông",
+    "price": "250.000đ",
+    "image": "",
+    "link": "",
+    "available": true,
+    "order": 1
+  },
+  "example-product-2": {
+    "name": "Giỏ trái cây cao cấp",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây nhập khẩu cao cấp",
+    "price": "500.000đ",
+    "image": "",
+    "link": "",
+    "available": true,
+    "order": 2
+  }
+}
