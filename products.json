@@ -1,14 +1,4 @@
 {
-  "gio-qua-1": {
-    "name": "Giỏ trái cây cao cấp",
-    "category": "Giỏ quà",
-    "description": "Giỏ trái cây tươi ngon, đa dạng loại trái cây cao cấp",
-    "price": "500.000đ",
-    "image": "images/gio-qua-1.webp",
-    "link": "",
-    "available": true,
-    "order": 1
-  },
   "gio-qua-2": {
     "name": "Giỏ quà trái cây vàng",
     "category": "Giỏ quà",
