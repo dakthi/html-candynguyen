@@ -386,7 +386,7 @@
 
                     <p style="margin-bottom: 12px;">Sau khi ra trường đó, mình làm cho công ty tổ chức sự kiện. Khi mà ai có tiệc liên quan tới hoa là mình lãnh hết. Mình nhận hết. Mình kêu để đó em làm cho – là mình làm rẹt rẹt cho các anh chị khác luôn.</p>
 
-                    <p style="margin-bottom: 0;">Rồi từ đó, khi về quê, thì mình không biết làm gì để sống. Thì mình làm rất là nhiều việc, trong đó có shop hoa. ❤️</p>
+                    <p style="margin-bottom: 0;">Rồi từ đó, khi về quê, thì mình không biết làm gì để sống. Thì mình làm rất là nhiều việc, trong đó có shop hoa.</p>
                 </div>
 
                 <h2>Sản phẩm của mình</h2>
@@ -469,7 +469,7 @@
                             : 'Chưa có ảnh';
 
                         const externalLinkHTML = item.link
-                            ? `<a href="${item.link}" class="product-link" target="_blank" onclick="event.stopPropagation();">🔗 Link bên ngoài</a>`
+                            ? `<a href="${item.link}" class="product-link" target="_blank" onclick="event.stopPropagation();">Link bên ngoài</a>`
                             : '';
 
                         const statusHTML = !item.available
@@ -480,18 +480,18 @@
 
                         // Show duration for services
                         const durationHTML = item.type === 'service' && item.duration
-                            ? `<div class="product-description" style="font-style: italic; color: #999;">⏱️ ${item.duration}</div>`
+                            ? `<div class="product-description" style="font-style: italic; color: #999;">${item.duration}</div>`
                             : '';
 
                         // Show booking required for services
                         const bookingHTML = item.type === 'service' && item.bookingRequired
-                            ? '<div class="product-description" style="font-size: 9px; color: #d9534f;">📅 Cần đặt trước</div>'
+                            ? '<div class="product-description" style="font-size: 9px; color: #d9534f;">Cần đặt trước</div>'
                             : '';
 
                         // Order button
                         const orderURL = `order.html?product=${item.id}&name=${encodeURIComponent(item.name)}`;
                         const orderButtonHTML = item.available
-                            ? `<a href="${orderURL}" class="order-btn" onclick="event.stopPropagation();">🛒 Đặt hàng ngay</a>`
+                            ? `<a href="${orderURL}" class="order-btn" onclick="event.stopPropagation();">Đặt hàng ngay</a>`
                             : '';
 
                         html += `
@@ -503,14 +503,14 @@
                                 ${bookingHTML}
                                 <div class="product-price">${item.price}</div>
                                 ${statusHTML}
-                                <div class="expand-hint">👆 Nhấn để xem chi tiết</div>
+                                <div class="expand-hint">Nhấn để xem chi tiết</div>
 
                                 <div class="product-details">
                                     <div style="font-size: 11px; line-height: 1.6;">
-                                        <strong>📦 Danh mục:</strong> ${item.category}<br>
-                                        ${item.type === 'service' && item.duration ? `<strong>⏱️ Thời gian:</strong> ${item.duration}<br>` : ''}
-                                        ${item.type === 'service' && item.bookingRequired ? '<strong>📅 Đặt trước:</strong> Có<br>' : ''}
-                                        ${item.description ? `<strong>📝 Chi tiết:</strong> ${item.description}<br>` : ''}
+                                        <strong>Danh mục:</strong> ${item.category}<br>
+                                        ${item.type === 'service' && item.duration ? `<strong>Thời gian:</strong> ${item.duration}<br>` : ''}
+                                        ${item.type === 'service' && item.bookingRequired ? '<strong>Đặt trước:</strong> Có<br>' : ''}
+                                        ${item.description ? `<strong>Chi tiết:</strong> ${item.description}<br>` : ''}
                                     </div>
                                     <div style="margin-top: 15px;">
                                         ${orderButtonHTML}
