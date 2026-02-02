@@ -378,60 +378,81 @@
     </div>
 
     <script>
-        // Load products
-        fetch('products.json')
-            .then(response => response.json())
-            .then(productsData => {
+        // Load both products and services
+        Promise.all([
+            fetch('products.json').then(r => r.json()),
+            fetch('services.json').then(r => r.json())
+        ])
+            .then(([productsData, servicesData]) => {
                 const container = document.getElementById('productsContainer');
 
-                // Convert to array and sort by order
+                // Convert products to array
                 const products = Object.entries(productsData)
-                    .map(([id, product]) => ({ id, ...product }))
+                    .map(([id, item]) => ({ id, type: 'product', ...item }));
+
+                // Convert services to array
+                const services = Object.entries(servicesData)
+                    .map(([id, item]) => ({ id, type: 'service', ...item }));
+
+                // Combine and sort by order
+                const allItems = [...products, ...services]
                     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-                if (products.length === 0) {
-                    container.innerHTML = '<div class="loading">Chưa có sản phẩm nào</div>';
+                if (allItems.length === 0) {
+                    container.innerHTML = '<div class="loading">Chưa có sản phẩm hoặc dịch vụ nào</div>';
                     return;
                 }
 
                 // Group by category
                 const categories = {};
-                products.forEach(product => {
-                    const cat = product.category || 'Khác';
+                allItems.forEach(item => {
+                    const cat = item.category || 'Khác';
                     if (!categories[cat]) {
                         categories[cat] = [];
                     }
-                    categories[cat].push(product);
+                    categories[cat].push(item);
                 });
 
                 // Render by category
                 let html = '';
-                Object.entries(categories).forEach(([category, categoryProducts]) => {
+                Object.entries(categories).forEach(([category, categoryItems]) => {
                     html += `<div class="category-section">`;
                     html += `<h3 class="category-header">${category}</h3>`;
                     html += `<div class="products-grid">`;
 
-                    categoryProducts.forEach(product => {
-                        const imageHTML = product.image
-                            ? `<img src="${product.image}" alt="${product.name}">`
+                    categoryItems.forEach(item => {
+                        const imageHTML = item.image
+                            ? `<img src="${item.image}" alt="${item.name}">`
                             : 'Chưa có ảnh';
 
-                        const linkHTML = product.link && product.available
-                            ? `<a href="${product.link}" class="product-link" target="_blank">Mua ngay</a>`
+                        const linkHTML = item.link && item.available
+                            ? `<a href="${item.link}" class="product-link" target="_blank">${item.type === 'service' ? 'Đặt dịch vụ' : 'Mua ngay'}</a>`
                             : '';
 
-                        const statusHTML = !product.available
+                        const statusHTML = !item.available
                             ? '<span class="product-status">Hết hàng</span>'
                             : '';
 
-                        const unavailableClass = !product.available ? ' unavailable' : '';
+                        const unavailableClass = !item.available ? ' unavailable' : '';
+
+                        // Show duration for services
+                        const durationHTML = item.type === 'service' && item.duration
+                            ? `<div class="product-description" style="font-style: italic; color: #999;">⏱️ ${item.duration}</div>`
+                            : '';
+
+                        // Show booking required for services
+                        const bookingHTML = item.type === 'service' && item.bookingRequired
+                            ? '<div class="product-description" style="font-size: 9px; color: #d9534f;">📅 Cần đặt trước</div>'
+                            : '';
 
                         html += `
                             <div class="product-card${unavailableClass}">
                                 <div class="product-image">${imageHTML}</div>
-                                <div class="product-name">${product.name}</div>
-                                <div class="product-description">${product.description}</div>
-                                <div class="product-price">${product.price}</div>
+                                <div class="product-name">${item.name}</div>
+                                <div class="product-description">${item.description}</div>
+                                ${durationHTML}
+                                ${bookingHTML}
+                                <div class="product-price">${item.price}</div>
                                 ${linkHTML}
                                 ${statusHTML}
                             </div>
@@ -446,7 +467,7 @@
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('productsContainer').innerHTML =
-                    '<div class="loading">Lỗi khi tải sản phẩm</div>';
+                    '<div class="loading">Lỗi khi tải sản phẩm và dịch vụ</div>';
             });
 
         // Hamburger menu toggle
