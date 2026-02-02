@@ -591,6 +591,185 @@
                     </table>
                 </form>
             </div>
+
+            <!-- Products List -->
+            <div class="admin-box" style="margin-top: 30px;">
+                <h2>» Quản lý sản phẩm</h2>
+                <p style="margin-bottom: 10px; font-size: 10px;">
+                    <button class="btn btn-primary" onclick="showNewProductForm()">+ Thêm sản phẩm</button>
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <input type="text" id="productSearchBox" placeholder="Tìm kiếm sản phẩm..." style="width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; font-size: 11px; font-family: Verdana, Arial, sans-serif;">
+                </p>
+                <div class="table-wrapper">
+                    <table class="posts-table">
+                        <thead>
+                            <tr>
+                                <th width="10%">Ảnh</th>
+                                <th width="25%">Tên</th>
+                                <th width="15%">Danh mục</th>
+                                <th width="15%">Giá</th>
+                                <th width="10%">Còn hàng</th>
+                                <th width="25%">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New Product Form -->
+            <div id="new-product-box" class="admin-box" style="display:none; margin-top: 15px;">
+                <h2>» Thêm sản phẩm mới</h2>
+                <form id="new-product-form">
+                    <table class="form-table">
+                        <tr>
+                            <td width="20%"><label>ID:</label></td>
+                            <td><input type="text" id="new-product-id" placeholder="Tự động tạo nếu để trống"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Tên sản phẩm:</label></td>
+                            <td><input type="text" id="new-product-name" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>Danh mục:</label></td>
+                            <td><input type="text" id="new-product-category" placeholder="Ví dụ: Giỏ quà, Hoa tươi"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Mô tả:</label></td>
+                            <td><textarea id="new-product-description"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label>Giá:</label></td>
+                            <td><input type="text" id="new-product-price" placeholder="Ví dụ: 500.000đ"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Hình ảnh:</label></td>
+                            <td>
+                                <input type="file" id="new-product-image" accept="image/*">
+                                <div style="font-size: 9px; color: #666; margin-top: 5px;">Tự động resize về 800px và chuyển sang .webp</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Link:</label></td>
+                            <td><input type="text" id="new-product-link" placeholder="Link mua hàng (tùy chọn)"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Còn hàng:</label></td>
+                            <td><input type="checkbox" id="new-product-available" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label>Thứ tự:</label></td>
+                            <td><input type="number" id="new-product-order" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Tạo sản phẩm</button>
+                                <button type="button" class="btn" onclick="hideNewProductForm()">Hủy</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <!-- Services List -->
+            <div class="admin-box" style="margin-top: 30px;">
+                <h2>» Quản lý dịch vụ</h2>
+                <p style="margin-bottom: 10px; font-size: 10px;">
+                    <button class="btn btn-primary" onclick="showNewServiceForm()">+ Thêm dịch vụ</button>
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <input type="text" id="serviceSearchBox" placeholder="Tìm kiếm dịch vụ..." style="width: 100%; max-width: 400px; padding: 8px; border: 1px solid #ccc; font-size: 11px; font-family: Verdana, Arial, sans-serif;">
+                </p>
+                <div class="table-wrapper">
+                    <table class="posts-table">
+                        <thead>
+                            <tr>
+                                <th width="10%">Ảnh</th>
+                                <th width="20%">Tên</th>
+                                <th width="15%">Danh mục</th>
+                                <th width="15%">Giá</th>
+                                <th width="10%">Thời gian</th>
+                                <th width="10%">Có sẵn</th>
+                                <th width="20%">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New Service Form -->
+            <div id="new-service-box" class="admin-box" style="display:none; margin-top: 15px;">
+                <h2>» Thêm dịch vụ mới</h2>
+                <form id="new-service-form">
+                    <table class="form-table">
+                        <tr>
+                            <td width="20%"><label>ID:</label></td>
+                            <td><input type="text" id="new-service-id" placeholder="Tự động tạo nếu để trống"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Tên dịch vụ:</label></td>
+                            <td><input type="text" id="new-service-name" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>Danh mục:</label></td>
+                            <td>
+                                <select id="new-service-category">
+                                    <option value="">Chọn danh mục</option>
+                                    <option value="Cắm hoa">Cắm hoa</option>
+                                    <option value="Decor sự kiện">Decor sự kiện</option>
+                                    <option value="Workshop">Workshop</option>
+                                    <option value="Giao hàng">Giao hàng</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Mô tả:</label></td>
+                            <td><textarea id="new-service-description"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><label>Giá:</label></td>
+                            <td><input type="text" id="new-service-price" placeholder="Ví dụ: 500.000đ/người"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Thời gian:</label></td>
+                            <td><input type="text" id="new-service-duration" placeholder="Ví dụ: 2 giờ, 1 ngày"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Cần đặt trước:</label></td>
+                            <td><input type="checkbox" id="new-service-booking" checked></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Hình ảnh:</label></td>
+                            <td>
+                                <input type="file" id="new-service-image" accept="image/*">
+                                <div style="font-size: 9px; color: #666; margin-top: 5px;">Tự động resize về 800px và chuyển sang .webp</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Link:</label></td>
+                            <td><input type="text" id="new-service-link" placeholder="Link đặt dịch vụ (tùy chọn)"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Có sẵn:</label></td>
+                            <td><input type="checkbox" id="new-service-available" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label>Thứ tự:</label></td>
+                            <td><input type="number" id="new-service-order" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Tạo dịch vụ</button>
+                                <button type="button" class="btn" onclick="hideNewServiceForm()">Hủy</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
         </div>
 
         <div class="sidebar" id="sidebar">
@@ -670,9 +849,15 @@
     <script>
         const REPO = 'dakthi/html-candynguyen';
         const CONTENT_PATH = 'posts_with_images.json';
+        const PRODUCTS_PATH = 'products.json';
+        const SERVICES_PATH = 'services.json';
 
         let posts = {};
         let contentSha = '';
+        let products = {};
+        let productsSha = '';
+        let services = {};
+        let servicesSha = '';
 
         // Check auth
         const token = localStorage.getItem('github_token');

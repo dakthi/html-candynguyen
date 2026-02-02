@@ -1,0 +1,38 @@
+{
+  "service-example-1": {
+    "name": "Cắm hoa theo yêu cầu",
+    "category": "Cắm hoa",
+    "description": "Dịch vụ cắm hoa theo yêu cầu của khách hàng. Tư vấn phong cách, màu sắc phù hợp với dịp lễ, sự kiện.",
+    "price": "Từ 300.000đ",
+    "duration": "1-2 giờ",
+    "bookingRequired": true,
+    "image": "",
+    "link": "",
+    "available": true,
+    "order": 1
+  },
+  "service-example-2": {
+    "name": "Decor tiệc cưới",
+    "category": "Decor sự kiện",
+    "description": "Trang trí hoa tươi cho tiệc cưới, bao gồm backdrop, bàn tiệc, lối đi. Tư vấn và thiết kế theo concept.",
+    "price": "Liên hệ",
+    "duration": "1 ngày",
+    "bookingRequired": true,
+    "image": "",
+    "link": "",
+    "available": true,
+    "order": 2
+  },
+  "service-example-3": {
+    "name": "Workshop cắm hoa cơ bản",
+    "category": "Workshop",
+    "description": "Lớp học cắm hoa cơ bản cho người mới bắt đầu. Học kỹ thuật cắm, chọn hoa, bảo quản hoa tươi lâu.",
+    "price": "500.000đ/người",
+    "duration": "3 giờ",
+    "bookingRequired": true,
+    "image": "",
+    "link": "",
+    "available": true,
+    "order": 3
+  }
+}
