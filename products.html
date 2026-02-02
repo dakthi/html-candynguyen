@@ -94,6 +94,7 @@
             background: #f9f9f9;
             padding: 15px;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .product-card:hover {
@@ -103,6 +104,48 @@
 
         .product-card.unavailable {
             opacity: 0.6;
+        }
+
+        .product-card.expanded {
+            grid-column: 1 / -1;
+            background: white;
+            border-color: #336699;
+            border-width: 3px;
+        }
+
+        .product-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dotted #336699;
+        }
+
+        .product-card.expanded .product-details {
+            display: block;
+        }
+
+        .order-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #336699;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            font-family: Verdana, Arial, sans-serif;
+        }
+
+        .order-btn:hover {
+            background: #4477aa;
+        }
+
+        .expand-hint {
+            font-size: 10px;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
         }
 
         .product-image {
@@ -425,8 +468,8 @@
                             ? `<img src="${item.image}" alt="${item.name}">`
                             : 'Chưa có ảnh';
 
-                        const linkHTML = item.link && item.available
-                            ? `<a href="${item.link}" class="product-link" target="_blank">${item.type === 'service' ? 'Đặt dịch vụ' : 'Mua ngay'}</a>`
+                        const externalLinkHTML = item.link
+                            ? `<a href="${item.link}" class="product-link" target="_blank" onclick="event.stopPropagation();">🔗 Link bên ngoài</a>`
                             : '';
 
                         const statusHTML = !item.available
@@ -445,16 +488,35 @@
                             ? '<div class="product-description" style="font-size: 9px; color: #d9534f;">📅 Cần đặt trước</div>'
                             : '';
 
+                        // Order button
+                        const orderURL = `order.html?product=${item.id}&name=${encodeURIComponent(item.name)}`;
+                        const orderButtonHTML = item.available
+                            ? `<a href="${orderURL}" class="order-btn" onclick="event.stopPropagation();">🛒 Đặt hàng ngay</a>`
+                            : '';
+
                         html += `
-                            <div class="product-card${unavailableClass}">
+                            <div class="product-card${unavailableClass}" onclick="toggleCard(this)">
                                 <div class="product-image">${imageHTML}</div>
                                 <div class="product-name">${item.name}</div>
                                 <div class="product-description">${item.description}</div>
                                 ${durationHTML}
                                 ${bookingHTML}
                                 <div class="product-price">${item.price}</div>
-                                ${linkHTML}
                                 ${statusHTML}
+                                <div class="expand-hint">👆 Nhấn để xem chi tiết</div>
+
+                                <div class="product-details">
+                                    <div style="font-size: 11px; line-height: 1.6;">
+                                        <strong>📦 Danh mục:</strong> ${item.category}<br>
+                                        ${item.type === 'service' && item.duration ? `<strong>⏱️ Thời gian:</strong> ${item.duration}<br>` : ''}
+                                        ${item.type === 'service' && item.bookingRequired ? '<strong>📅 Đặt trước:</strong> Có<br>' : ''}
+                                        ${item.description ? `<strong>📝 Chi tiết:</strong> ${item.description}<br>` : ''}
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        ${orderButtonHTML}
+                                        ${externalLinkHTML}
+                                    </div>
+                                </div>
                             </div>
                         `;
                     });
@@ -469,6 +531,26 @@
                 document.getElementById('productsContainer').innerHTML =
                     '<div class="loading">Lỗi khi tải sản phẩm và dịch vụ</div>';
             });
+
+        // Toggle product card expansion
+        function toggleCard(card) {
+            // Close all other cards first
+            document.querySelectorAll('.product-card.expanded').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                }
+            });
+
+            // Toggle this card
+            card.classList.toggle('expanded');
+
+            // Scroll to card if expanding
+            if (card.classList.contains('expanded')) {
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
 
         // Hamburger menu toggle
         const hamburger = document.getElementById('hamburger');
