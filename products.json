@@ -1,22 +1,132 @@
 {
-  "example-product-1": {
-    "name": "Hoa hồng đỏ",
-    "category": "Hoa tươi",
-    "description": "Bó hoa hồng đỏ tươi 20 bông",
-    "price": "250.000đ",
-    "image": "",
+  "gio-qua-1": {
+    "name": "Giỏ trái cây cao cấp",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây tươi ngon, đa dạng loại trái cây cao cấp",
+    "price": "500.000đ",
+    "image": "images/gio-qua-1.webp",
     "link": "",
     "available": true,
     "order": 1
   },
-  "example-product-2": {
-    "name": "Giỏ trái cây cao cấp",
+  "gio-qua-2": {
+    "name": "Giỏ quà trái cây vàng",
     "category": "Giỏ quà",
-    "description": "Giỏ trái cây nhập khẩu cao cấp",
-    "price": "500.000đ",
-    "image": "",
+    "description": "Giỏ quà trang trí đẹp mắt với các loại trái cây tươi",
+    "price": "450.000đ",
+    "image": "images/gio-qua-2.webp",
     "link": "",
     "available": true,
     "order": 2
+  },
+  "gio-qua-3": {
+    "name": "Giỏ quà trái cây trung",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây tươi ngon với nhiều loại trái cây khác nhau",
+    "price": "400.000đ",
+    "image": "images/gio-qua-3.webp",
+    "link": "",
+    "available": true,
+    "order": 3
+  },
+  "gio-qua-4": {
+    "name": "Giỏ quà nhỏ xinh",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây nhỏ gọn, phù hợp tặng người thân",
+    "price": "350.000đ",
+    "image": "images/gio-qua-4.webp",
+    "link": "",
+    "available": true,
+    "order": 4
+  },
+  "gio-qua-5": {
+    "name": "Giỏ quà đặc biệt",
+    "category": "Giỏ quà",
+    "description": "Giỏ quà trái cây tươi kết hợp trang trí đẹp mắt",
+    "price": "480.000đ",
+    "image": "images/gio-qua-5.webp",
+    "link": "",
+    "available": true,
+    "order": 5
+  },
+  "gio-qua-6": {
+    "name": "Giỏ quà trái cây mix",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây mix nhiều loại, tươi ngon và bổ dưỡng",
+    "price": "420.000đ",
+    "image": "images/gio-qua-6.webp",
+    "link": "",
+    "available": true,
+    "order": 6
+  },
+  "gio-qua-7": {
+    "name": "Giỏ quà nhỏ gọn",
+    "category": "Giỏ quà",
+    "description": "Giỏ quà nhỏ xinh, dễ thương và tiện lợi",
+    "price": "300.000đ",
+    "image": "images/gio-qua-7.webp",
+    "link": "",
+    "available": true,
+    "order": 7
+  },
+  "gio-qua-8": {
+    "name": "Giỏ trái cây đẹp",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây trang trí đẹp, phù hợp làm quà biếu",
+    "price": "460.000đ",
+    "image": "images/gio-qua-8.webp",
+    "link": "",
+    "available": true,
+    "order": 8
+  },
+  "gio-qua-9": {
+    "name": "Giỏ quà trái cây xanh",
+    "category": "Giỏ quà",
+    "description": "Giỏ quà với trái cây tươi xanh, bổ dưỡng",
+    "price": "440.000đ",
+    "image": "images/gio-qua-9.webp",
+    "link": "",
+    "available": true,
+    "order": 9
+  },
+  "gio-qua-10": {
+    "name": "Giỏ quà thanh lịch",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây trang trí thanh lịch, sang trọng",
+    "price": "550.000đ",
+    "image": "images/gio-qua-10.webp",
+    "link": "",
+    "available": true,
+    "order": 10
+  },
+  "gio-qua-11": {
+    "name": "Giỏ quà mini",
+    "category": "Giỏ quà",
+    "description": "Giỏ quà nhỏ, phù hợp làm quà tặng ý nghĩa",
+    "price": "320.000đ",
+    "image": "images/gio-qua-11.webp",
+    "link": "",
+    "available": true,
+    "order": 11
+  },
+  "gio-qua-12": {
+    "name": "Giỏ trái cây phong phú",
+    "category": "Giỏ quà",
+    "description": "Giỏ quà với nhiều loại trái cây phong phú",
+    "price": "490.000đ",
+    "image": "images/gio-qua-12.webp",
+    "link": "",
+    "available": true,
+    "order": 12
+  },
+  "gio-qua-13": {
+    "name": "Giỏ quà VIP",
+    "category": "Giỏ quà",
+    "description": "Giỏ trái cây cao cấp nhất, đầy đủ các loại trái cây nhập khẩu",
+    "price": "600.000đ",
+    "image": "images/gio-qua-13.webp",
+    "link": "",
+    "available": true,
+    "order": 13
   }
 }
